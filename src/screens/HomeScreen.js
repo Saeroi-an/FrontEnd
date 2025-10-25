@@ -36,14 +36,13 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         {/* 파란 배너 */}
-
         <Pressable style={styles.blueCard} onPress={() => { navigation.navigate('CameraConfirm')}}>
           <Text style={styles.blueBadge}>읽기 힘든 처방전, 한눈에 알아보기</Text>
           <Text style={styles.blueTitle}>처방전 인식하기</Text>
           <View style={styles.blueIconRow}>
             <Image
-              source={require('../../assets/images/translate_icon.png')}
-              style={{ width: 100, height: 100, marginLeft: 150, }}
+              source={require('../../assets/images/note.png')}
+              style={{ width: 90, height: 90, marginLeft: 160, marginBottom:13,}}
             />
           </View>
         </Pressable>
@@ -52,13 +51,13 @@ export default function HomeScreen({ navigation }) {
         <Text style={styles.sectionTitle}>진단서</Text>
         <View style={styles.cardList}>
           <ArrowCard
-            icon={<Ionicons name="calendar-outline" size={22} color="#FF7A59" />}
+            icon={<Ionicons name="calendar-outline" size={24} color="#FF7A59" />}
             title="셀프 진단 체크"
             subtitle="어디서든 혼자서 간편하게"
             onPress={() => { navigation.navigate('SelfCheck')}}
           />
           <ArrowCard
-            icon={<Ionicons name="folder-open-outline" size={22} color="#5B7CFF" />}
+            icon={<Ionicons name="folder-open-outline" size={24} color="#5B7CFF" />}
             title="진단 저장 내역"
             subtitle="한눈에 알아보는"
             onPress={() => { navigation.navigate('History')}}
