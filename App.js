@@ -9,6 +9,7 @@ import MyPageScreen from './src/screens/MyPageScreen';
 import SelfCheckScreen from './src/screens/SelfCheckScreen';
 import QuestionStep from './src/screens/QuestionStep';
 import ResultScreen from './src/screens/ResultScreen';
+import HistoryScreen from './src/screens/HistoryScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -47,6 +48,7 @@ export default function App() {
         <Stack.Screen name="SelfCheck" component={SelfCheckScreen} />
         <Stack.Screen name="QuestionStep" component={QuestionStep} />
         <Stack.Screen name="Result" component={ResultScreen} />
+        <Stack.Screen name="History" component={HistoryScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

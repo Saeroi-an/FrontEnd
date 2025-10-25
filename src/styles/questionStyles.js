@@ -5,8 +5,20 @@ const BLUE = '#5B7CFF';
 export default StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: '#F5F6F8',
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal:6,
   },
+
+  header: {
+    height: 48,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    justifyContent: 'space-between',
+    backgroundColor: '#FFFFFF',
+  },
+  headerTitle: { fontSize: 16, fontWeight: '700', color: '#111' },
+
 
   /* 진행바 */
   progressTrack: {
@@ -22,6 +34,20 @@ export default StyleSheet.create({
     backgroundColor: BLUE,
   },
 
+  categoryText: {
+    fontSize: 23,
+    fontWeight: 'bold',
+    marginTop: 50,
+  },
+
+  qText: {
+    fontSize: 15,
+    fontWeight: '300',
+    color: '#111',
+    marginBottom: 50,
+    marginTop: 10,
+  },
+
   /* 본문 */
   container: {
     padding: 16,
@@ -35,12 +61,7 @@ export default StyleSheet.create({
     color: '#9AA1A9',
     marginBottom: 4,
   },
-  qText: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: '#111',
-    marginBottom: 12,
-  },
+
 
   /* 옵션 버튼 */
   optBtn: {
@@ -96,4 +117,43 @@ export default StyleSheet.create({
     color: '#111',
     fontWeight: '700',
   },
+  optBtn: {
+    paddingHorizontal: 16,
+    borderRadius: 20,
+    marginVertical: 5,
+    height: 60,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: '#fff',
+    justifyContent: 'center',     // 텍스트 세로 중앙
+    position: 'relative',
+  },
+  optRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between', // ✅ 아이콘을 오른쪽 끝으로
+  },
+  optActive: {
+    borderColor: '#007AFF',
+    backgroundColor: '#EAF2FF',
+  },
+  optInactive: {
+    borderColor: '#ddd',
+  },
+  optText: {
+    fontSize: 16,
+    color: '#333',
+    marginLeft:5,
+  },
+  optTextActive: {
+    color: '#007AFF',
+    fontWeight: '600',
+  },
+  optCheck: {
+    position: 'absolute',
+  right: 16,      // ✅ 오른쪽 끝 여백
+
+  },
+
 });
+

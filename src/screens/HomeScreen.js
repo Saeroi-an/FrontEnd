@@ -60,7 +60,7 @@ export default function HomeScreen({ navigation }) {
             icon={<Ionicons name="folder-open-outline" size={22} color="#5B7CFF" />}
             title="진단 저장 내역"
             subtitle="한눈에 알아보는"
-            onPress={() => { }}
+            onPress={() => { navigation.navigate('History')}}
           />
         </View>
 
