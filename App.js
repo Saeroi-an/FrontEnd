@@ -10,6 +10,9 @@ import SelfCheckScreen from './src/screens/SelfCheckScreen';
 import QuestionStep from './src/screens/QuestionStep';
 import ResultScreen from './src/screens/ResultScreen';
 import HistoryScreen from './src/screens/HistoryScreen';
+import LoginScreen from './src/screens/LoginScreen';
+import LanguageScreen from './src/screens/LanguageScreen';
+import InfoScreen from './src/screens/InfoScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -43,7 +46,13 @@ function Tabs() {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator 
+      screenOptions={{ headerShown: false }}
+      initialRouteName="Login"
+      >
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Language" component={LanguageScreen} />
+        <Stack.Screen name="Info" component={InfoScreen} />
         <Stack.Screen name="Tabs" component={Tabs} />
         <Stack.Screen name="SelfCheck" component={SelfCheckScreen} />
         <Stack.Screen name="QuestionStep" component={QuestionStep} />
