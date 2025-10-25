@@ -58,8 +58,8 @@ export default StyleSheet.create({
         elevation: 3,
         justifyContent: 'flex-start',
       },
-      blueBadge: { color: '#E8EDFF', fontSize: 12, marginTop: 0 },
-      blueTitle: { color: '#fff', fontSize: 18, fontWeight: '800', marginTop:2, },
+      blueBadge: { color: '#E8EDFF', fontSize: 13, marginTop: 0 },
+      blueTitle: { color: '#fff', fontSize: 19, fontWeight: '800', marginTop:2, },
       blueIconRow: { position: 'absolute', right: 10, bottom: -5, flexDirection: 'row' },
     
       sectionTitle: { marginTop: 18, marginBottom: 10, fontSize: 16, fontWeight: '700', color: '#222' },
