@@ -108,9 +108,9 @@ export default function HistoryScreen({ navigation }) {
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                 }
-                ListHeaderComponent={
-                    <Text style={styles.pageTitle}>셀프 진단 내력이에요</Text>
-                }
+                // ListHeaderComponent={
+                //     <Text style={styles.pageTitle}>셀프 진단 내력이에요</Text>
+                // }
                 ListEmptyComponent={
                     <View style={styles.emptyBox}>
                         <Text style={styles.emptyTitle}>저장된 진단이 없어요</Text>
