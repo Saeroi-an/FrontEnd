@@ -36,7 +36,7 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         {/* 파란 배너 */}
-        <Pressable style={styles.blueCard}>
+        <Pressable style={styles.blueCard} onPress={() => { navigation.navigate('CameraConfirm')}}>
           <Text style={styles.blueBadge}>읽기 힘든 처방전, 한눈에 알아보기</Text>
           <Text style={styles.blueTitle}>처방전 인식하기</Text>
           <View style={styles.blueIconRow}>
