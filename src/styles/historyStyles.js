@@ -78,7 +78,11 @@ export default StyleSheet.create({
   cardMetaText: {
     fontSize: 13,
     color: '#9AA0A6',
-    marginLeft: 6,
+    marginLeft:-3,
+  },
+
+  dateicon:{
+    marginTop:2,
   },
 
   separator: {

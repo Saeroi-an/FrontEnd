@@ -7,11 +7,10 @@ import styles from '../styles/questionStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CATEGORY_TITLES } from '../data/categoryTitles';
 import { v4 as uuid } from 'uuid';
-import 'react-native-get-random-values'
 import { saveDiagnosisSession } from '../lib/history';
 
 const CATEGORY_LABELS = {
-    eye: '👁️ 눈',
+    eye: '👀 눈',
     nose: '👃🏻 코/호흡기/내과',
     bandage: '🩹 외상/외과',
     bone: '🦴 뼈/관절',
@@ -39,7 +38,7 @@ export default function QuestionStep({ route, navigation }) {
         return null;
     }
 
-    const onNext = () => {
+    const onNext = async () => {
         const nextAnswers = { ...answers, [q.id]: choice };
         const nextIdx = idx + 1;
         if (nextIdx < questions.length) {
@@ -48,10 +47,21 @@ export default function QuestionStep({ route, navigation }) {
                 idx: nextIdx,
                 answers: nextAnswers,
             });
-            console.log({nextAnswers})
+            console.log({ nextAnswers })
         } else {
+            try {
+                // ✅ 저장: 선택 부위 각각 1개의 엔트리 생성, answers 포함
+                await appendHistoryByParts(selectedParts, {
+                    answers: nextAnswers,
+                    selectedParts,
+                });
+            } catch (e) {
+                console.warn('appendHistory error', e);
+            }
+            const afterRaw = await AsyncStorage.getItem('diagnosis_history');
+            console.log('after save count =', afterRaw ? JSON.parse(afterRaw).length : 0);
             navigation.replace('Result', { answers: nextAnswers });
-            console.log({nextAnswers})
+            console.log({ nextAnswers })
         }
     };
 
