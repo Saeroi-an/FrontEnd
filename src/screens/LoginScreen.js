@@ -1,15 +1,47 @@
 // src/screens/LoginScreen.js
-import React from 'react';
-import { View, Text, Pressable, StyleSheet, Image } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, Pressable, StyleSheet, Image, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
+import * as WebBrowser from 'expo-web-browser';
+import { API_ENDPOINTS } from '../lib/api';
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen({ navigation }) {
     const onGoogleSignIn = async () => {
-        // TODO: 구글 로그인 로직 연결 (expo-auth-session or firebase)
-        // 성공 후 메인 탭으로 이동
-        navigation.replace('Language');
-    };
+        try {
+            // 백엔드 Google 로그인 페이지 열기
+            const result = await WebBrowser.openAuthSessionAsync(
+                API_ENDPOINTS.GOOGLE_LOGIN,
+                'exp://localhost:8081'
+            );
+
+            if (result.type === 'success' && result.url) {
+                // URL에서 토큰 추출
+                const url = new URL(result.url);
+                const accessToken = url.searchParams.get('access_token');
+                const refreshToken = url.searchParams.get('refresh_token');
+
+                if (accessToken && refreshToken) {
+                    // 토큰 저장
+                    await AsyncStorage.setItem('access_token', accessToken);
+                    await AsyncStorage.setItem('refresh_token', refreshToken);
+                    
+                    Alert.alert('로그인 성공', '로그인이 완료되었습니다.');
+                    navigation.replace('Language');
+                } else {
+                    Alert.alert('로그인 오류', '토큰을 받지 못했습니다.');
+                }
+            } else {
+                Alert.alert('로그인 취소', '로그인이 취소되었습니다.');
+            }
+        } catch (error) {
+        console.error('Google login error:', error);
+        Alert.alert('로그인 오류', '로그인 중 문제가 발생했습니다.');
+    }
+};
 
     return (
         <SafeAreaView style={styles.safe}>
