@@ -4,10 +4,10 @@ export default StyleSheet.create({
     safe: { flex: 1, backgroundColor: '#fff' },
     container: { flex: 1, paddingHorizontal: 24, paddingTop: 32 },
 
-    titleTop: { fontSize: 14, color: '#6B7280', marginBottom: 6 },
+    titleTop: { fontSize: 14, color: '#6B7280', marginBottom: 6, marginTop:15 },
     titleMain: { fontSize: 24, fontWeight: '800', color: '#111', marginBottom: 22 },
 
-    label: { fontSize: 14, fontWeight: '600', color: '#111', marginBottom: 10 },
+    label: { fontSize: 14, fontWeight: '600', color: '#111', marginBottom: 10, marginTop:30, },
 
     segmentRow: { flexDirection: 'row', gap: 10 },
     segment: {
