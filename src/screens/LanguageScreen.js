@@ -13,7 +13,7 @@ const LANG_OPTIONS = [
 ];
 
 export default function LanguageScreen({ navigation }) {
-  const [selected, setSelected] = useState('zh'); // 기본값: 중국어
+  const [selected, setSelected] = useState('ko'); // 기본값: 중국어
 
   const onNext = async () => {
     try {
@@ -44,7 +44,7 @@ export default function LanguageScreen({ navigation }) {
                 </View>
                 <View style={styles.textBox}>
                   <Text style={[styles.label, active && styles.activeText]}>{lang.label}</Text>
-                  <Text style={styles.sub}>{lang.sub}</Text>
+                  <Text style={[styles.sub, active && styles.activeText]}>{lang.sub}</Text>
                 </View>
                 {active && <Ionicons name="checkmark" size={22} color="#2F6FED" />}
               </Pressable>
