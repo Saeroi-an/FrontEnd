@@ -10,6 +10,10 @@ import SelfCheckScreen from './src/screens/SelfCheckScreen';
 import QuestionStep from './src/screens/QuestionStep';
 import ResultScreen from './src/screens/ResultScreen';
 import HistoryScreen from './src/screens/HistoryScreen';
+import LoginScreen from './src/screens/LoginScreen';
+import LanguageScreen from './src/screens/LanguageScreen';
+import InfoScreen from './src/screens/InfoScreen';
+import CameraCaptureScreen from './src/screens/CameraCaptureScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -43,8 +47,15 @@ function Tabs() {
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator 
+      screenOptions={{ headerShown: false }}
+      initialRouteName="Tabs"
+      >
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="Language" component={LanguageScreen} />
+        <Stack.Screen name="Info" component={InfoScreen} />
         <Stack.Screen name="Tabs" component={Tabs} />
+        <Stack.Screen name="CameraCapture" component={CameraCaptureScreen} options={{ title: '처방전 인식하기' }} />
         <Stack.Screen name="SelfCheck" component={SelfCheckScreen} />
         <Stack.Screen name="QuestionStep" component={QuestionStep} />
         <Stack.Screen name="Result" component={ResultScreen} />
