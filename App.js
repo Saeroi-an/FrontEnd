@@ -2,6 +2,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image } from 'react-native';
+import 'react-native-get-random-values';
+import { v4 as uuid } from 'uuid';
 
 import HomeScreen from './src/screens/HomeScreen';
 import HospitalScreen from './src/screens/HospitalScreen';
@@ -14,6 +16,8 @@ import LoginScreen from './src/screens/LoginScreen';
 import LanguageScreen from './src/screens/LanguageScreen';
 import InfoScreen from './src/screens/InfoScreen';
 import CameraCaptureScreen from './src/screens/CameraCaptureScreen';
+import HistoryDetailScreen from './src/screens/HistoryDetailScreen';
+
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -60,6 +64,7 @@ export default function App() {
         <Stack.Screen name="QuestionStep" component={QuestionStep} />
         <Stack.Screen name="Result" component={ResultScreen} />
         <Stack.Screen name="History" component={HistoryScreen} />
+        <Stack.Screen name="HistoryDetail" component={HistoryDetailScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

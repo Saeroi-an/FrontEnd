@@ -76,7 +76,7 @@ export default function HistoryScreen({ navigation }) {
 
             {/* ② 날짜 */}
             <View style={styles.cardMetaRow}>
-                {/* <Ionicons name="time-outline" size={14} color="#9AA0A6" /> */}
+                <Ionicons name="time-outline" size={14} color="#9AA0A6" style={styles.dateicon}/>
                 <Text style={styles.cardMetaText}>{formatDate(item.dateISO)}</Text>
             </View>
         </Pressable>

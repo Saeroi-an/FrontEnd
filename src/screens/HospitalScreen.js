@@ -13,7 +13,7 @@ const MOCK = Array.from({ length: 6 }).map((_, i) => ({
 
 export default function HospitalScreen({ navigation }) {
   const renderItem = ({ item }) => (
-    <Pressable style={styles.card} onPress={() => { /* navigation.navigate('HospitalDetail', { id: item.id }) */ }}>
+    <Pressable style={styles.card} onPress={() => { navigation.navigate('HospitalDetail', { id: item.id }) }}>
       {/* 썸네일 자리 */}
       <View style={styles.thumb} />
 
