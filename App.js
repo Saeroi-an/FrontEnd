@@ -53,12 +53,12 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator 
       screenOptions={{ headerShown: false }}
-      initialRouteName="Login"
+      initialRouteName="Tabs"
       >
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Language" component={LanguageScreen} />
         <Stack.Screen name="Info" component={InfoScreen} />
-        <Stack.Screen name="Tabs" component={Tabs} />
+        < Stack.Screen name="Tabs" component={Tabs} />
         <Stack.Screen name="CameraCapture" component={CameraCaptureScreen} options={{ title: '처방전 인식하기' }} />
         <Stack.Screen name="SelfCheck" component={SelfCheckScreen} />
         <Stack.Screen name="QuestionStep" component={QuestionStep} />
