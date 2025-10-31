@@ -2,9 +2,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { View, Text, Image, Alert, Pressable, StyleSheet, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Entypo from '@expo/vector-icons/Entypo';
 import * as ImagePicker from 'expo-image-picker';
+import styles from '../styles/cameraCaptureStyles'; // 👈 스타일 분리
 
-export default function CameraCaptureScreen({navigation}) {
+export default function CameraCaptureScreen({ navigation }) {
     const [photoUri, setPhotoUri] = useState(null);
     const [showResult, setShowResult] = useState(false);
 
@@ -59,23 +61,20 @@ export default function CameraCaptureScreen({navigation}) {
                     <Ionicons name="chevron-back" size={22} color="#111" />
                 </Pressable>
                 <Text style={styles.headerTitle}>진단 저장 내역</Text>
-                <View style={{ width: 22 }} /> 
+                <View style={{ width: 22 }} />
             </View>
 
-            <ScrollView contentContainerStyle={styles.container}>
+            <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
                 {!showResult ? (
                     <>
-                        <Text style={styles.title}>카메라 준비 중...</Text>
-                        <Pressable style={styles.button} onPress={openCamera}>
+                        {/* 카메라  */}
+                        {/* <Text style={styles.title}>카메라 준비 중...</Text> */}
+                        {/* <Pressable style={styles.button} onPress={openCamera}>
                             <Text style={styles.btnText}>다시 촬영하기</Text>
-                        </Pressable>
+                        </Pressable> */}
                     </>
                 ) : (
                     <>
-
-                        <Text style={styles.title}>
-                            <Text style={{ color: '#2563eb', fontWeight: 'bold' }}>김성신</Text>님의 처방전 내용입니다
-                        </Text>
 
                         <View style={styles.imageWrap}>
                             {photoUri ? (
@@ -85,17 +84,21 @@ export default function CameraCaptureScreen({navigation}) {
                                     <Text>처방전 사진</Text>
                                 </View>
                             )}
+
                         </View>
 
                         <View style={styles.card}>
                             <Text style={styles.cardTitle}>📄 처방전 인식결과</Text>
-                            <InfoRow label="환자명" value="김성신" />
-                            <InfoRow label="생년월일" value="2025년 10월 26일" />
-                            <InfoRow label="처방일" value="2025년 10월 26일" />
-                            <InfoRow label="병명" value="역류성 식도염" />
-                            <InfoRow label="약품명" value="아스피린 100mg" />
-                            <InfoRow label="복용법" value="하루 1회, 아침 식후" />
-                            <InfoRow label="질병코드" value="Z031" />
+                            <View style={styles.cardtext}>
+                                <InfoRow label="환자명" value="김성신" />
+                                <InfoRow label="생년월일" value="2025년 10월 26일" />
+                                <InfoRow label="처방일" value="2025년 10월 26일" />
+                                <InfoRow label="병명" value="역류성 식도염" />
+                                <InfoRow label="약품명" value="아스피린 100mg" />
+                                <InfoRow label="복용법" value="하루 1회, 아침 식후" />
+                                <InfoRow label="질병코드" value="Z031" />
+                            </View>
+
                         </View>
 
                         <Pressable style={[styles.button, { marginTop: 16 }]} onPress={handleRetake}>
@@ -111,49 +114,12 @@ export default function CameraCaptureScreen({navigation}) {
 function InfoRow({ label, value }) {
     return (
         <View style={styles.infoRow}>
+            <View style={{flexDirection:'row'}}>
+            <Entypo name="dot-single" size={20} color="#4b5563" />                
             <Text style={styles.label}>{label}</Text>
-            <Text>{value}</Text>
+            </View>
+            <Text style={styles.value}>{value}</Text>
         </View>
     );
 }
 
-const styles = StyleSheet.create({
-    container: { alignItems: 'center', padding: 16 },
-    title: { fontSize: 16, fontWeight: '500', marginBottom: 16, alignSelf: 'flex-start' },
-    imageWrap: { width: '100%', alignItems: 'center', marginBottom: 20 },
-    image: { width: 300, height: 300, borderRadius: 10, resizeMode: 'cover' },
-    placeholder: { width: 300, height: 300, backgroundColor: '#e5e7eb', alignItems: 'center', justifyContent: 'center', borderRadius: 10 },
-    card: {
-        backgroundColor: '#fff',
-        width: '100%',
-        borderRadius: 12,
-        padding: 16,
-        shadowColor: '#000',
-        shadowOpacity: 0.08,
-        shadowRadius: 6,
-        elevation: 4,
-    },
-    cardTitle: { fontWeight: '600', marginBottom: 12 },
-    infoRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 8 },
-    label: { fontWeight: '500', color: '#4b5563' },
-    button: { backgroundColor: '#111827', paddingVertical: 12, paddingHorizontal: 18, borderRadius: 10 },
-    btnText: { color: 'white', fontSize: 16, fontWeight: '600' },
-
-  header: {
-    height: 48,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    backgroundColor: '#fff',
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#E6E8EB',
-    marginTop:50,
-  },
-  headerTitle: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#111',
-  },
-});
