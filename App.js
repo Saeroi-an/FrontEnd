@@ -17,6 +17,7 @@ import LanguageScreen from './src/screens/LanguageScreen';
 import InfoScreen from './src/screens/InfoScreen';
 import CameraCaptureScreen from './src/screens/CameraCaptureScreen';
 import HistoryDetailScreen from './src/screens/HistoryDetailScreen';
+import ChatPrescriptionScreen from './src/screens/ChatPrescriptionScreen'
 
 
 const Tab = createBottomTabNavigator();
@@ -59,6 +60,7 @@ export default function App() {
         <Stack.Screen name="Language" component={LanguageScreen} />
         <Stack.Screen name="Info" component={InfoScreen} />
         < Stack.Screen name="Tabs" component={Tabs} />
+        <Stack.Screen name="ChatPrescription" component={ChatPrescriptionScreen} options={{ title: '처방전 인식하기' }} />
         <Stack.Screen name="CameraCapture" component={CameraCaptureScreen} options={{ title: '처방전 인식하기' }} />
         <Stack.Screen name="SelfCheck" component={SelfCheckScreen} />
         <Stack.Screen name="QuestionStep" component={QuestionStep} />
