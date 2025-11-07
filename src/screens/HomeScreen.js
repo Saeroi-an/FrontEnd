@@ -5,6 +5,7 @@ import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import styles from '../styles/homeStyles'; // 👈 스타일 분리
 
 export default function HomeScreen({ navigation }) {
+  
   return (
     <SafeAreaView style={styles.safe}>
       {/* 상단 헤더 */}
@@ -20,7 +21,7 @@ export default function HomeScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         {/* 인사 + 서브텍스트 */}
         <View style={styles.greetBox}>
-          <Text style={styles.greetTitle}>김성신님 안녕하세요!</Text>
+          <Text style={styles.greetTitle}>username님 안녕하세요!</Text>
           <Text style={styles.greetSub}>건강고민, 새로이안에게 맡겨 보세요!</Text>
         </View>
 
@@ -36,7 +37,7 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         {/* 파란 배너 */}
-        <Pressable style={styles.blueCard} onPress={() => { navigation.navigate('CameraCapture')}}>
+        <Pressable style={styles.blueCard} onPress={() => { navigation.navigate('ChatPrescription')}}>
           <Text style={styles.blueBadge}>읽기 힘든 처방전을 한눈에!</Text>
           <Text style={styles.blueTitle}>처방전 인식하기</Text>
           <View style={styles.blueIconRow}>
@@ -98,11 +99,11 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         {/* 최근 진단 내용 */}
-        <Text style={styles.sectionTitle}>최근 진단 내용</Text>
+        {/* <Text style={styles.sectionTitle}>최근 진단 내용</Text>
         <View style={styles.cardList}>
           <HistoryItem title="병명예시" date="2025.09.25" onPress={() => { }} />
           <HistoryItem title="병명예시" date="2025.09.25" onPress={() => { }} />
-        </View>
+        </View> */}
       </ScrollView>
     </SafeAreaView>
   );
