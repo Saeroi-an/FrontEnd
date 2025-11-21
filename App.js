@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image } from 'react-native';
 import 'react-native-get-random-values';
+import * as WebBrowser from 'expo-web-browser';
 import { v4 as uuid } from 'uuid';
 
 import HomeScreen from './src/screens/HomeScreen';
@@ -17,8 +18,9 @@ import LanguageScreen from './src/screens/LanguageScreen';
 import InfoScreen from './src/screens/InfoScreen';
 import CameraCaptureScreen from './src/screens/CameraCaptureScreen';
 import HistoryDetailScreen from './src/screens/HistoryDetailScreen';
+import ChatPrescriptionScreen from './src/screens/ChatPrescriptionScreen'
 
-
+WebBrowser.maybeCompleteAuthSession();
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -53,12 +55,13 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator 
       screenOptions={{ headerShown: false }}
-      initialRouteName="Login"
+      initialRouteName="Info"
       >
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Language" component={LanguageScreen} />
         <Stack.Screen name="Info" component={InfoScreen} />
         < Stack.Screen name="Tabs" component={Tabs} />
+        <Stack.Screen name="ChatPrescription" component={ChatPrescriptionScreen} options={{ title: '처방전 인식하기' }} />
         <Stack.Screen name="CameraCapture" component={CameraCaptureScreen} options={{ title: '처방전 인식하기' }} />
         <Stack.Screen name="SelfCheck" component={SelfCheckScreen} />
         <Stack.Screen name="QuestionStep" component={QuestionStep} />

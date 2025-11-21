@@ -52,11 +52,11 @@ export default function HospitalScreen({ navigation }) {
       <View style={styles.info}>
         <Text style={styles.name}>{item.name}</Text>
         <View style={styles.metaRow}>
-          <Ionicons name="call-outline" size={14} color="#8A8F98" />
+          <Ionicons name="call-outline" size={12} color="#8A8F98" />
           <Text style={styles.metaText}>{item.phone}</Text>
         </View>
         <View style={styles.metaRow}>
-          <Ionicons name="location-outline" size={14} color="#8A8F98" />
+          <Ionicons name="location-outline" size={12} color="#8A8F98" />
           <Text style={styles.metaText}>{item.address}</Text>
         </View>
       </View>

@@ -16,7 +16,7 @@ export default function ResultScreen({ navigation, route }) {
 
   const goSaved = () => {
     // 진단 저장 내역 화면으로 이동할 때 라우트 이름에 맞게 수정
-    // navigation.navigate('SavedList');
+    navigation.navigate('History');
   };
 
   return (

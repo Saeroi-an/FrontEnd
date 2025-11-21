@@ -15,7 +15,7 @@ export default function MyPageScreen() {
         <View style={styles.profileRow}>
           <View style={styles.avatar} />
           <View style={{ flex: 1, marginLeft:7, }}>
-            <Text style={styles.name}>김성신님</Text>
+            <Text style={styles.name}>username님</Text>
             <Text style={styles.subText}>만 21세{'\n'}160cm 55kg</Text>
           </View>
         </View>

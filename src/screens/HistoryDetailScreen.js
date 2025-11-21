@@ -101,12 +101,14 @@ export default function HistoryDetailScreen({navigation}) {
                 <View style={{ width: 22 }} />
             </View>
 
+
+<View style={{padding:20}}>
             {/* 상단 타이틀 */}
-            <Text style={{ fontSize: 20, fontWeight: '700', color: '#1f2937' }}>
-                {headerTitle}
+            <Text style={{ fontSize: 24, fontWeight: '700', color: '#3276EB', marginLeft:10,marginTop:15, }}>
+                👃🏻{headerTitle}
             </Text>
             {!!dateLabel && (
-                <Text style={{ marginTop: 4, color: '#6b7280' }}>
+                <Text style={{ marginTop: 4, color: '#6b7280', marginLeft:10 }}>
                     {dateLabel}에 진단한 내역이에요
                 </Text>
             )}
@@ -119,7 +121,7 @@ export default function HistoryDetailScreen({navigation}) {
                         marginTop: 16,
                         backgroundColor: '#fff',
                         borderRadius: 16,
-                        padding: 14,
+                        padding: 20,
                         shadowColor: '#000',
                         shadowOpacity: 0.06,
                         shadowRadius: 8,
@@ -127,18 +129,17 @@ export default function HistoryDetailScreen({navigation}) {
                     }}
                 >
                     {/* 섹션 헤더 (예: 👀 눈 진단내역) */}
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
-                        <Ionicons name="ellipse-outline" size={16} color="#6b7280" />
-                        <Text style={{ marginLeft: 6, fontSize: 16, fontWeight: '700' }}>
+                    {/* <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 6 }}>
+                        <Text style={{ fontSize: 20, fontWeight: '700' }}>
                             {sec.title}
                         </Text>
-                    </View>
+                    </View> */}
 
                     <FlatList
                         data={sec.rows}
                         keyExtractor={(it) => it.qid}
                         ItemSeparatorComponent={() => (
-                            <View style={{ height: 1, backgroundColor: '#eee', marginVertical: 10 }} />
+                            <View style={{ height: 1, backgroundColor: '#eee', marginVertical: 19, }} />
                         )}
                         renderItem={({ item }) => (
                             <View>
@@ -158,6 +159,7 @@ export default function HistoryDetailScreen({navigation}) {
                         }
                     />
                 </View>
+                
             ))}
 
             {/* 섹션이 하나도 없을 때(방어) */}
@@ -167,5 +169,7 @@ export default function HistoryDetailScreen({navigation}) {
                 </View>
             )}
         </View>
+        </View>
+
     );
 }
