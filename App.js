@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image } from 'react-native';
 import 'react-native-get-random-values';
+import * as WebBrowser from 'expo-web-browser';
 import { v4 as uuid } from 'uuid';
 
 import HomeScreen from './src/screens/HomeScreen';
@@ -19,7 +20,7 @@ import CameraCaptureScreen from './src/screens/CameraCaptureScreen';
 import HistoryDetailScreen from './src/screens/HistoryDetailScreen';
 import ChatPrescriptionScreen from './src/screens/ChatPrescriptionScreen'
 
-
+WebBrowser.maybeCompleteAuthSession();
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
@@ -54,7 +55,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator 
       screenOptions={{ headerShown: false }}
-      initialRouteName="Login"
+      initialRouteName="Info"
       >
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Language" component={LanguageScreen} />
