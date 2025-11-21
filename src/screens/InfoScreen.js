@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { View, Text, Pressable, TextInput, Modal, FlatList, TouchableOpacity, Alert, ActivityIndicator,  } from 'react-native';
+import { View, Text, Pressable, TextInput, Modal, FlatList, TouchableOpacity, Alert, ActivityIndicator, } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
@@ -21,6 +21,7 @@ export default function InfoScreen({ navigation }) {
   const [day, setDay] = useState('');
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
+  const [nickname, setNickname] = useState(''); // 🔹 닉네임 추가
   const [yearOpen, setYearOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // 🔹 로딩 상태 추가
 
@@ -44,6 +45,7 @@ export default function InfoScreen({ navigation }) {
       birthISO,
       height: h,
       weight: w,
+      nickname, // 🔹 닉네임 저장
       savedAt: new Date().toISOString(),
     };
 
@@ -147,6 +149,16 @@ export default function InfoScreen({ navigation }) {
           />
           <Text style={styles.unit}>kg</Text>
         </View>
+
+        {/* 닉네임 */}
+        <Text style={[styles.label, { marginTop: 22 }]}>닉네임</Text>
+        <TextInput
+          value={nickname}
+          onChangeText={setNickname}
+          placeholder="원하시는 닉네임을 입력해주세요"
+          placeholderTextColor="#C5CBD4"
+          style={styles.nickInput}
+        />
 
         {/* 완료 버튼 */}
         <Pressable style={styles.button} onPress={onComplete}>

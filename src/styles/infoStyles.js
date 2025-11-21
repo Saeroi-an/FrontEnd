@@ -104,4 +104,16 @@ export default StyleSheet.create({
         borderBottomColor: '#EEF1F4',
     },
     yearText: { fontSize: 16, color: '#111' },
+    nickInput: {
+        width: '100%',
+        backgroundColor: 'white',
+        borderRadius: 10,
+        paddingVertical: 14,
+        paddingHorizontal: 16,
+        fontSize: 16,
+        color: '#111',
+        borderWidth: 1,
+        borderColor: '#E0E4EA',
+        marginTop: 6,
+      },
 });

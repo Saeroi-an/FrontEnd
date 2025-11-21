@@ -11,31 +11,31 @@ import {
   Platform,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "../styles/chatPrescriptionStyles";
+import { API_ENDPOINTS } from "../lib/api";
 
 // 메시지 유틸
 const makeId = () => Math.random().toString(36).slice(2);
 
-export default function ChatPrescriptionScreen({navigation}) {
+export default function ChatPrescriptionScreen({ navigation }) {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [openingCamera, setOpeningCamera] = useState(false);
   const listRef = useRef(null);
 
-  // 진입 시 카메라 자동 오픈 + 안내 메시지
-  useEffect(() => {
-    openCameraAndPushImage();
-  }, []);
-
   // 카메라 권한 & 촬영
   const openCameraAndPick = useCallback(async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== "granted") {
-      alert("카메라 권한이 필요합니다. 설정에서 권한을 허용해주세요.");
+      Alert.alert(
+        "권한 필요",
+        "카메라 권한이 필요합니다. 설정에서 권한을 허용해주세요."
+      );
       return null;
     }
     const result = await ImagePicker.launchCameraAsync({
@@ -47,13 +47,70 @@ export default function ChatPrescriptionScreen({navigation}) {
     return asset?.uri ?? null;
   }, []);
 
-  // 촬영 → 유저 이미지 메시지 추가 → (백엔드 호출 자리)
+  // MIME 추정
+  const guessContentType = (uri) => {
+    const lower = uri.split("?")[0].toLowerCase();
+    if (lower.endsWith(".png")) return "image/png";
+    if (lower.endsWith(".webp")) return "image/webp";
+    if (lower.endsWith(".heic")) return "image/heic";
+    if (lower.endsWith(".heif")) return "image/heif";
+    return "image/jpeg";
+  };
+
+  // S3 업로드 API 호출
+  const uploadPrescription = async (uri) => {
+    console.log("🔵 uploadPrescription 호출, uri =", uri);
+
+    const nameFromUri = uri.split("/").pop() || "photo.jpg";
+    const contentType = guessContentType(uri);
+
+    console.log("🟡 파일 이름:", nameFromUri, " / contentType:", contentType);
+
+    const form = new FormData();
+    form.append("file", { uri, name: nameFromUri, type: contentType });
+
+    console.log(
+      "🟣 FormData 준비 완료, endpoint =",
+      API_ENDPOINTS.PRESCRIPTION_UPLOAD
+    );
+
+    const res = await fetch(API_ENDPOINTS.PRESCRIPTION_UPLOAD, {
+      method: "POST",
+      body: form, // Content-Type 자동
+    });
+
+    console.log("🟠 HTTP 응답 status =", res.status);
+    const text = await res.text();
+    console.log("📝 응답 원문 =", text);
+
+    let json;
+    try {
+      json = JSON.parse(text);
+    } catch (e) {
+      throw new Error("JSON 파싱 실패: " + text);
+    }
+
+    if (!res.ok) {
+      throw new Error(`업로드 실패(${res.status}) ${json?.message || ""}`);
+    }
+    if (!json?.success) {
+      throw new Error(json?.message || "업로드 응답 에러");
+    }
+
+    console.log("✅ uploadPrescription 성공, data =", json.data);
+    return json.data; // { id, file_url, original_filename, ai_analysis }
+  };
+
+  // 촬영 → 이미지 메시지 + S3 업로드 → 안내 텍스트 추가
   const openCameraAndPushImage = useCallback(async () => {
+    console.log("🔴 openCameraAndPushImage 시작");
     try {
       setOpeningCamera(true);
       const uri = await openCameraAndPick();
       if (!uri) return;
+      console.log("🟠 카메라에서 받은 uri:", uri);
 
+      // 1) 유저 이미지 메시지 추가
       const imgMsg = {
         id: makeId(),
         role: "user",
@@ -63,32 +120,32 @@ export default function ChatPrescriptionScreen({navigation}) {
       };
       setMessages((prev) => [...prev, imgMsg]);
 
-      const pendingId = makeId();
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: pendingId,
-          role: "assistant",
-          kind: "text",
-          content: "__LOADING__",
-          createdAt: Date.now(),
-        },
-      ]);
+      // 2) 👉 실제 S3 업로드
+      const data = await uploadPrescription(uri);
+      console.log("✅ S3 업로드 완료:", data.file_url);
 
-      // TODO: 여기서 이미지 업로드/분석 API 호출
-      setTimeout(() => {
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.id === pendingId
-              ? {
-                  ...m,
-                  content:
-                    "사진을 확인했어요. 예: 아세트아미노펜 500mg, 하루 3회(식후 30분) 복용 등으로 보입니다. 어떤 점이 궁금하신가요?",
-                }
-              : m
-          )
-        );
-      }, 1200);
+      // 3) 업로드 완료 안내 텍스트 메시지 추가
+      const botMsg = {
+        id: makeId(),
+        role: "assistant",
+        kind: "text",
+        content:
+          "사진을 성공적으로 업로드했어요! 이제 처방전에 대해 궁금한 점을 채팅으로 물어보세요.",
+        createdAt: Date.now(),
+      };
+      setMessages((prev) => [...prev, botMsg]);
+    } catch (e) {
+      console.error(e);
+      const errMsg = {
+        id: makeId(),
+        role: "assistant",
+        kind: "text",
+        content:
+          "업로드 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.",
+        createdAt: Date.now(),
+      };
+      setMessages((prev) => [...prev, errMsg]);
+      Alert.alert("에러", String(e?.message || e));
     } finally {
       setOpeningCamera(false);
       requestAnimationFrame(() => {
@@ -97,7 +154,12 @@ export default function ChatPrescriptionScreen({navigation}) {
     }
   }, [openCameraAndPick]);
 
-  // 특정 이미지 메시지 재촬영
+  // 진입 시 카메라 자동 오픈
+  useEffect(() => {
+    openCameraAndPushImage();
+  }, [openCameraAndPushImage]);
+
+  // 특정 이미지 메시지 재촬영 (S3 재업로드는 아직 안 함)
   const retakeFor = useCallback(
     async (messageId) => {
       const uri = await openCameraAndPick();
@@ -111,7 +173,7 @@ export default function ChatPrescriptionScreen({navigation}) {
     [openCameraAndPick]
   );
 
-  // 사용자 질문 → assistant 응답(여러 번 가능)
+  // 사용자 질문 → demo 응답
   const onSend = useCallback(() => {
     const text = input.trim();
     if (!text) return;
@@ -133,18 +195,16 @@ export default function ChatPrescriptionScreen({navigation}) {
         id: pendingId,
         role: "assistant",
         kind: "text",
-        content: "__LOADING__",
+        content: "__LOADING__", // 여기만 로딩 유지 (텍스트 질문용)
         createdAt: Date.now(),
       },
     ]);
 
-    // TODO: 여기서 실제 챗봇 API 호출
+    // 데모 응답 (AI 연동 전)
     setTimeout(() => {
       setMessages((prev) =>
         prev.map((m) =>
-          m.id === pendingId
-            ? { ...m, content: makeDemoAnswer(text) }
-            : m
+          m.id === pendingId ? { ...m, content: makeDemoAnswer(text) } : m
         )
       );
       requestAnimationFrame(() => {
@@ -178,11 +238,21 @@ export default function ChatPrescriptionScreen({navigation}) {
         ]}
       >
         <View
-          style={isImage ? styles.imageBubble : isUser ? styles.msgBubbleUser : styles.msgBubbleBot}
+          style={
+            isImage
+              ? styles.imageBubble
+              : isUser
+              ? styles.msgBubbleUser
+              : styles.msgBubbleBot
+          }
         >
           {isImage ? (
             <View>
-              <Image source={{ uri: item.uri }} style={styles.msgImage} resizeMode="cover" />
+              <Image
+                source={{ uri: item.uri }}
+                style={styles.msgImage}
+                resizeMode="cover"
+              />
               {/* 사진 왼쪽 카메라 아이콘 = 재촬영 */}
               <TouchableOpacity
                 onPress={() => retakeFor(item.id)}
@@ -212,12 +282,12 @@ export default function ChatPrescriptionScreen({navigation}) {
       >
         {/* 헤더 */}
         <View style={styles.header}>
-        <Pressable hitSlop={8} onPress={() => navigation.goBack()}>
-          <Ionicons name="chevron-back" size={22} color="#111" />
-        </Pressable>
-        <Text style={styles.headerTitle}>처방전 인식하기</Text>
-        <View style={{ width: 22 }} />
-          {/* 하단 주석 해제 시 헤더에 재촬영 버튼 생김 */}
+          <Pressable hitSlop={8} onPress={() => navigation.goBack()}>
+            <Ionicons name="chevron-back" size={22} color="#111" />
+          </Pressable>
+          <Text style={styles.headerTitle}>처방전 인식하기</Text>
+          <View style={{ width: 22 }} />
+          {/* 필요하면 헤더 재촬영 버튼 활성화 */}
           {/* <Pressable
             onPress={openCameraAndPushImage}
             style={styles.cameraBtn}
@@ -230,7 +300,6 @@ export default function ChatPrescriptionScreen({navigation}) {
           </Pressable> */}
         </View>
 
-
         {/* 채팅 목록 */}
         <FlatList
           ref={listRef}
@@ -238,7 +307,9 @@ export default function ChatPrescriptionScreen({navigation}) {
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
           contentContainerStyle={styles.listContainer}
-          onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: true })}
+          onContentSizeChange={() =>
+            listRef.current?.scrollToEnd({ animated: true })
+          }
           onLayout={() => listRef.current?.scrollToEnd({ animated: true })}
         />
 
