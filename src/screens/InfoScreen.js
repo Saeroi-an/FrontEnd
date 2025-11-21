@@ -198,6 +198,8 @@ function UnderlineInput(props) {
             {...props}
             style={[styles.underlineInput, props.style]}
             placeholderTextColor="#C5CBD4"
+            returnKeyType="done" 
+            blurOnSubmit={true}
         />
     );
 }

@@ -15,19 +15,27 @@ export default function LoginScreen({ navigation }) {
             // 백엔드 Google 로그인 페이지 열기
             const result = await WebBrowser.openAuthSessionAsync(
                 API_ENDPOINTS.GOOGLE_LOGIN,
-                'exp://192.168.35.21:8081'
+                `${API_BASE_URL}/callback`
             );
-
+            
             if (result.type === 'success' && result.url) {
-                // URL에서 토큰 추출
+                // URL에서 토큰과 사용자 정보 추출
                 const url = new URL(result.url);
                 const accessToken = url.searchParams.get('access_token');
                 const refreshToken = url.searchParams.get('refresh_token');
-
+                const userId = url.searchParams.get('user_id');
+                const userName = url.searchParams.get('user_name');
+                const userEmail = url.searchParams.get('user_email');
+                
                 if (accessToken && refreshToken) {
                     // 토큰 저장
                     await AsyncStorage.setItem('access_token', accessToken);
                     await AsyncStorage.setItem('refresh_token', refreshToken);
+                    
+                    // 사용자 정보 저장
+                    await AsyncStorage.setItem('user_id', userId || '');
+                    await AsyncStorage.setItem('user_name', userName || '');
+                    await AsyncStorage.setItem('user_email', userEmail || '');
                     
                     Alert.alert('로그인 성공', '로그인이 완료되었습니다.');
                     navigation.replace('Language');
@@ -38,15 +46,14 @@ export default function LoginScreen({ navigation }) {
                 Alert.alert('로그인 취소', '로그인이 취소되었습니다.');
             }
         } catch (error) {
-        console.error('Google login error:', error);
-        Alert.alert('로그인 오류', '로그인 중 문제가 발생했습니다.');
-    }
-};
-
+            console.error('Google login error:', error);
+            Alert.alert('로그인 오류', '로그인 중 문제가 발생했습니다.');
+        }
+    };
+    
     return (
         <SafeAreaView style={styles.safe}>
             <View style={styles.wrap}>
-
                 {/* 로고 영역 */}
                 <View style={styles.logoBox}>
                     <View style={styles.brandRow}>
@@ -54,13 +61,13 @@ export default function LoginScreen({ navigation }) {
                     </View>
                     <Text style={styles.subtitle}>당신의 편안한 진료를 위해</Text>
                 </View>
-
+                
                 {/* 구글 로그인 버튼 */}
                 <Pressable onPress={onGoogleSignIn} style={styles.googleBtn}>
                     <Image source={require('../../assets/icon/google.png')} style={styles.google} />
                     <Text style={styles.googleText}>구글 계정으로 로그인</Text>
                 </Pressable>
-
+                
                 {/* 여백 채우기 */}
                 <View style={{ height: 40 }} />
             </View>
@@ -76,13 +83,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         paddingVertical: 48,
     },
-
     // 로고
     logoBox: { alignItems: 'center', marginTop: 240 },
     brandRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
     subtitle: { marginTop: 10, fontSize: 16, color: '#555' },
-    logo: { width:210, height:44, },
-
+    logo: { width: 210, height: 44 },
     // 구글 버튼
     googleBtn: {
         position: 'absolute',
@@ -97,6 +102,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         gap: 10,
     },
-    google: {width:18,height:18,},
+    google: { width: 18, height: 18 },
     googleText: { fontSize: 14, fontWeight: '600', color: '#222' },
 });
