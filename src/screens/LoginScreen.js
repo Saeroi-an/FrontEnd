@@ -15,7 +15,7 @@ export default function LoginScreen({ navigation }) {
             // 백엔드 Google 로그인 페이지 열기
             const result = await WebBrowser.openAuthSessionAsync(
                 API_ENDPOINTS.GOOGLE_LOGIN,
-                'exp://192.168.0.85:8081'
+                API_ENDPOINTS.GOOGLE_CALLBACK
             );
 
             if (result.type === 'success' && result.url) {

@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles/infoStyles';
+import { API_ENDPOINTS, authenticatedFetch } from '../lib/api';
 
 const STORAGE_KEY = 'user_basic_info';
 
@@ -35,29 +36,51 @@ export default function InfoScreen({ navigation }) {
   const onComplete = async () => {
     const h = Number(height);
     const w = Number(weight);
+    
     if (Number.isNaN(h) || Number.isNaN(w)) {
       return Alert.alert('안내', '신체정보를 숫자로 입력해주세요.');
     }
 
-    const payload = {
-      gender,
-      birthYear: year,
-      birthISO,
+    // 🔹 백엔드로 보낼 데이터
+    const requestBody = {
+      nickname: nickname,  // 닉네임
+      gender: gender,
+      birth_year: Number(year),
+      birth_month: Number(month),
+      birth_day: Number(day),
       height: h,
       weight: w,
-      nickname, // 🔹 닉네임 저장
-      savedAt: new Date().toISOString(),
     };
 
     try {
-      setIsLoading(true); // 🔹 로딩 시작
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // 🔹 1초 대기 (API나 저장 중인 것처럼)
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-      setIsLoading(false); // 🔹 로딩 종료
-      Alert.alert('저장 완료', '기본정보가 저장되었습니다.');
-      navigation.replace('Tabs');
+      setIsLoading(true);
+
+      // 🔹 백엔드 API 호출
+      const response = await authenticatedFetch(API_ENDPOINTS.UPDATE_PROFILE, {
+        method: 'PATCH',
+        body: JSON.stringify(requestBody),
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        
+        // AsyncStorage에도 저장 (옵션)
+        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify({
+          ...requestBody,
+          savedAt: new Date().toISOString(),
+        }));
+
+        setIsLoading(false);
+        Alert.alert('저장 완료', '기본정보가 저장되었습니다.');
+        navigation.replace('Tabs');
+      } else {
+        setIsLoading(false);
+        const errorData = await response.json();
+        Alert.alert('오류', errorData.detail || '저장에 실패했습니다.');
+      }
     } catch (e) {
       setIsLoading(false);
+      console.error('프로필 업데이트 오류:', e);
       Alert.alert('오류', '저장에 실패했어요. 다시 시도해주세요.');
     }
   };
