@@ -17,31 +17,40 @@ export default function LoginScreen({ navigation }) {
                 API_ENDPOINTS.GOOGLE_LOGIN,
                 'exp://192.168.0.85:8081'
             );
-
+            // 1️⃣ 먼저 result 검사
             if (result.type === 'success' && result.url) {
-                // URL에서 토큰 추출
+                // 2️⃣ URL에서 토큰 추출
                 const url = new URL(result.url);
                 const accessToken = url.searchParams.get('access_token');
                 const refreshToken = url.searchParams.get('refresh_token');
 
+                // 3️⃣ 토큰이 있을 때만 진행
                 if (accessToken && refreshToken) {
-                    // 토큰 저장
                     await AsyncStorage.setItem('access_token', accessToken);
                     await AsyncStorage.setItem('refresh_token', refreshToken);
-                    
+
+                    // 🔹 추가: 유저 기본 정보 확인
+                    const basicInfo = await AsyncStorage.getItem('user_basic_info');
+
                     Alert.alert('로그인 성공', '로그인이 완료되었습니다.');
-                    navigation.replace('Language');
-                } else {
-                    Alert.alert('로그인 오류', '토큰을 받지 못했습니다.');
+
+                    if (basicInfo) {
+                        navigation.replace('Tabs');      // 이미 인포페이지 입력 완
+                    } else {
+                        navigation.replace('Language');  // 새 사용자
+                    }
+                    return;
                 }
-            } else {
-                Alert.alert('로그인 취소', '로그인이 취소되었습니다.');
             }
+
+            // 실패 처리
+            Alert.alert('로그인 오류', '토큰을 받지 못했습니다.');
+
         } catch (error) {
-        console.error('Google login error:', error);
-        Alert.alert('로그인 오류', '로그인 중 문제가 발생했습니다.');
-    }
-};
+            console.error('Google login error:', error);
+            Alert.alert('로그인 오류', '로그인 중 문제가 발생했습니다.');
+        }
+    };
 
     return (
         <SafeAreaView style={styles.safe}>
@@ -81,7 +90,7 @@ const styles = StyleSheet.create({
     logoBox: { alignItems: 'center', marginTop: 240 },
     brandRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
     subtitle: { marginTop: 10, fontSize: 16, color: '#555' },
-    logo: { width:210, height:44, },
+    logo: { width: 210, height: 44, },
 
     // 구글 버튼
     googleBtn: {
@@ -97,6 +106,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         gap: 10,
     },
-    google: {width:18,height:18,},
+    google: { width: 18, height: 18, },
     googleText: { fontSize: 14, fontWeight: '600', color: '#222' },
 });

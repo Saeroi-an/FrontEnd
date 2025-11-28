@@ -21,7 +21,7 @@ export default function HospitalScreen({ navigation }) {
       console.log('✅ 응답 상태:', response.status);  // 추가
       
       const data = await response.json();
-      console.log('📦 데이터:', data);  // 추가
+      // console.log('📦 데이터:', data); 
       
       setHospitals(prev => [...prev, ...data.hospitals]);
       setOffset(prev => prev + LIMIT);
