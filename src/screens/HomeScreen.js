@@ -1,11 +1,48 @@
-import React from 'react';
+import { useEffect, useState } from "react";
 import { View, Text, ScrollView, TextInput, Pressable, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles/homeStyles'; // 👈 스타일 분리
+import { fetchProfile } from "../lib/api";
 
 export default function HomeScreen({ navigation }) {
-  
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    fetchProfile().then((data) => {
+      setProfile(data);
+    }).catch((err) => {
+      console.log("프로필 불러오기 실패:", err);
+    });
+  }, []);
+
+  //BMI 계산 함수
+  function getBmiStatus(bmi) {
+    if (bmi < 18.5) return "저체중";
+    if (bmi < 23) return "정상";
+    if (bmi < 25) return "과체중";
+    return "비만";
+  }
+
+  const bmi = profile
+    ? profile.weight / Math.pow(profile.height / 100, 2)
+    : null;
+
+  const bmiRounded = bmi ? bmi.toFixed(2) : null;
+  const bmiStatus = bmi ? getBmiStatus(bmi) : "";
+  const height = profile ? profile.height : null;
+  const weight = profile ? profile.weight : null;  
+
+  //BMI 동적으로 이동하는 함수
+  function getBmiPosition(bmi) {
+    if (bmi <= 18.5) return (bmi / 18.5) * 20;                // 0~20%
+    if (bmi <= 23) return 20 + ((bmi - 18.5) / (23 - 18.5)) * 20; // 20~40%
+    if (bmi <= 25) return 40 + ((bmi - 23) / (25 - 23)) * 20; // 40~60%
+    if (bmi <= 30) return 60 + ((bmi - 25) / (30 - 25)) * 20; // 60~80%
+    return 80 + Math.min(((bmi - 30) / 5) * 20, 20);          // 80~100%
+  }
+  const bmiPosition = getBmiPosition(bmi);
+
   return (
     <SafeAreaView style={styles.safe}>
       {/* 상단 헤더 */}
@@ -21,7 +58,9 @@ export default function HomeScreen({ navigation }) {
       <ScrollView contentContainerStyle={styles.container} showsVerticalScrollIndicator={false}>
         {/* 인사 + 서브텍스트 */}
         <View style={styles.greetBox}>
-          <Text style={styles.greetTitle}>username님 안녕하세요!</Text>
+          <Text style={styles.greetTitle}>
+            {profile ? `${profile.nickname}님 안녕하세요!` : '불러오는 중...'}
+          </Text>
           <Text style={styles.greetSub}>건강고민, 새로이안에게 맡겨 보세요!</Text>
         </View>
 
@@ -37,13 +76,13 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         {/* 파란 배너 */}
-        <Pressable style={styles.blueCard} onPress={() => { navigation.navigate('ChatPrescription')}}>
+        <Pressable style={styles.blueCard} onPress={() => { navigation.navigate('ChatPrescription') }}>
           <Text style={styles.blueBadge}>읽기 힘든 처방전을 한눈에!</Text>
           <Text style={styles.blueTitle}>처방전 인식하기</Text>
           <View style={styles.blueIconRow}>
             <Image
               source={require('../../assets/images/note.png')}
-              style={{ width: 90, height: 90, marginLeft: 160, marginBottom:13,}}
+              style={{ width: 90, height: 90, marginLeft: 160, marginBottom: 13, }}
             />
           </View>
         </Pressable>
@@ -55,48 +94,66 @@ export default function HomeScreen({ navigation }) {
             icon={<Ionicons name="calendar-outline" size={24} color="#FF7A59" />}
             title="셀프 진단 체크"
             subtitle="어디서든 혼자서 간편하게"
-            onPress={() => { navigation.navigate('SelfCheck')}}
+            onPress={() => { navigation.navigate('SelfCheck') }}
           />
           <ArrowCard
             icon={<Ionicons name="folder-open-outline" size={24} color="#5B7CFF" />}
             title="진단 저장 내역"
             subtitle="한눈에 알아보는"
-            onPress={() => { navigation.navigate('History')}}
+            onPress={() => { navigation.navigate('History') }}
           />
         </View>
 
         {/* BMI 카드 */}
         <View style={styles.bmiCard}>
           <View style={styles.rowBetween}>
-            <Text style={styles.bmiRowText}><Text style={styles.bold}>키</Text> 160cm</Text>
+            <Text style={styles.bmiRowText}><Text style={styles.bold}>키</Text> {height}cm</Text>
             <Text style={styles.separator}>|</Text>
-            <Text style={styles.bmiRowText}><Text style={styles.bold}>몸무게</Text> 55kg</Text>
+            <Text style={styles.bmiRowText}><Text style={styles.bold}>몸무게</Text> {weight}kg</Text>
             <View style={styles.bmiChip}>
-              <Text style={styles.bmiChipText}>BMI 21.48 · 정상</Text>
+              <Text style={styles.bmiChipText}>
+                BMI {bmiRounded} · {bmiStatus}
+              </Text>
             </View>
           </View>
 
-          <View style={styles.bmiCenter}>
-            <Text style={styles.bmiBubble}>21.48 정상</Text>
-          </View>
+          {/* BMI 구간 바 + 포인터 */}
+          <View style={{ position: "relative", marginTop: 40, }}>
 
-          {/* 간단한 구간 바 */}
-          <View style={styles.scaleBar}>
-            <View style={[styles.scaleSeg, { flex: 18.5, backgroundColor: '#E6F0FF' }]} />
-            <View style={[styles.scaleSeg, { flex: 6.5, backgroundColor: '#CFE6FF' }]} />
-            <View style={[styles.scaleSeg, { flex: 7, backgroundColor: '#FFE7BA' }]} />
-            <View style={[styles.scaleSeg, { flex: 5, backgroundColor: '#FFD4D4' }]} />
-            <View style={[styles.scaleSeg, { flex: 5, backgroundColor: '#FFB3B3' }]} />
-          </View>
+            {/* BMI 말풍선 */}
+            <View
+              style={[
+                styles.bmiBubbleContainer,
+                { left: `${bmiPosition}%` }
+              ]}
+            >
+              <Text style={styles.bmiBubbleText}>
+                {bmiRounded} {bmiStatus}
+              </Text>
+            </View>
 
-          <View style={styles.scaleLabels}>
-            <Text style={styles.scaleLabel}>저체중</Text>
-            <Text style={styles.scaleLabel}>정상</Text>
-            <Text style={styles.scaleLabel}>과체중</Text>
-            <Text style={styles.scaleLabel}>비만</Text>
-            <Text style={styles.scaleLabel}>고도비만</Text>
+            <View style={styles.scaleBar}>
+              <View style={[styles.scaleSeg, { flex: 18.5, backgroundColor: '#E6F0FF' }]} />
+              <View style={[styles.scaleSeg, { flex: 6.5, backgroundColor: '#CFE6FF' }]} />
+              <View style={[styles.scaleSeg, { flex: 7, backgroundColor: '#FFE7BA' }]} />
+              <View style={[styles.scaleSeg, { flex: 5, backgroundColor: '#FFD4D4' }]} />
+              <View style={[styles.scaleSeg, { flex: 5, backgroundColor: '#FFB3B3' }]} />
+            </View>
+
+            <View style={styles.scaleLabels}>
+              <Text style={styles.scaleLabel}>저체중</Text>
+              <Text style={styles.scaleLabel}>정상</Text>
+              <Text style={styles.scaleLabel}>과체중</Text>
+              <Text style={styles.scaleLabel}>비만</Text>
+              <Text style={styles.scaleLabel}>고도비만</Text>
+            </View>
+
+
+
           </View>
         </View>
+
+
 
         {/* 최근 진단 내용 */}
         {/* <Text style={styles.sectionTitle}>최근 진단 내용</Text>
