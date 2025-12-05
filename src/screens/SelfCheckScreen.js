@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, Pressable, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';    // ⭐ 추가
 import { PARTS } from '../data/parts';
 import styles from '../styles/selfCheckStyles';
-  
 
 export default function SelfCheckScreen({ navigation }) {
+  const { t } = useTranslation();                 // ⭐ 추가
   const [selected, setSelected] = useState(new Set());
 
   const toggle = (id) => {
@@ -26,7 +27,9 @@ export default function SelfCheckScreen({ navigation }) {
         <Pressable hitSlop={8} onPress={() => navigation.goBack()}>
           <Ionicons name="chevron-back" size={22} color="#111" />
         </Pressable>
-        <Text style={styles.headerTitle}>셀프 진단 체크</Text>
+        <Text style={styles.headerTitle}>
+          {t('selfcheck_header_title')}
+        </Text>
         <View style={{ width: 22 }} />
       </View>
 
@@ -37,8 +40,10 @@ export default function SelfCheckScreen({ navigation }) {
 
       {/* 타이틀 */}
       <View style={styles.titleBox}>
-        <Text style={styles.title}>진단 부위</Text>
-        <Text style={styles.subtitle}>현재 불편하신 부위를 모두 선택해주세요!</Text>
+        <Text style={styles.title}>{t('selfcheck_title')}</Text>
+        <Text style={styles.subtitle}>
+          {t('selfcheck_subtitle')}
+        </Text>
       </View>
 
       {/* 6개 선택 카드 */}
@@ -51,10 +56,12 @@ export default function SelfCheckScreen({ navigation }) {
               onPress={() => toggle(p.id)}
               style={[styles.tile, isOn && styles.tileOn]}
             >
-              {/* 아이콘 자리 (원하면 Image로 교체) */}
-              <Image source={isOn ? p.iconOn : p.iconOff} style={styles.tileImage} />
+              <Image
+                source={isOn ? p.iconOn : p.iconOff}
+                style={styles.tileImage}
+              />
               <Text style={[styles.tileLabel, isOn && styles.tileLabelOn]}>
-                {p.label}
+              {t(p.labelKey)}
               </Text>
             </Pressable>
           );
@@ -63,17 +70,20 @@ export default function SelfCheckScreen({ navigation }) {
 
       {/* 다음 버튼 */}
       <Pressable
-        style={[styles.nextBtn, allSelected ? styles.nextBtnOn : styles.nextBtnOff]}
+        style={[
+          styles.nextBtn,
+          allSelected ? styles.nextBtnOn : styles.nextBtnOff,
+        ]}
         onPress={() => {
-            navigation.navigate('QuestionStep', {
-              selectedParts: Array.from(selected), // ['nose','surgery']
-              idx: 0,
-              answers: {}, // 누적 답안 저장용
-            });
-          }}
+          navigation.navigate('QuestionStep', {
+            selectedParts: Array.from(selected),
+            idx: 0,
+            answers: {},
+          });
+        }}
         disabled={!allSelected}
       >
-        <Text style={styles.nextText}>다음</Text>
+        <Text style={styles.nextText}>{t('selfcheck_next')}</Text>
       </Pressable>
     </SafeAreaView>
   );

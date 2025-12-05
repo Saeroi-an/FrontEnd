@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { View, Text, Pressable, TextInput, Modal, FlatList, TouchableOpacity, Alert, ActivityIndicator, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles/infoStyles';
@@ -39,16 +40,16 @@ export default function InfoScreen({ navigation }) {
     const w = Number(weight);
 
     if (Number.isNaN(h) || Number.isNaN(w)) {
-      return Alert.alert('안내', '신체정보를 숫자로 입력해주세요.');
+      Alert.alert(t('info_alert_notice_title'), t('info_alert_notice_body_invalid_number'))
     }
     if (!gender) {
-      return Alert.alert('안내', '성별을 선택해주세요.');
+      Alert.alert(t('info_alert_notice_title'), t('info_alert_notice_body_no_gender'))
     }
     if (!year || !month || !day) {
-      return Alert.alert('안내', '생년월일을 모두 입력해주세요.');
+      Alert.alert(t('info_alert_notice_title'), t('info_alert_notice_body_no_birth'))
     }
     if (!nickname.trim()) {
-      return Alert.alert('안내', '닉네임을 입력해주세요.');
+      Alert.alert(t('info_alert_notice_title'), t('info_alert_notice_body_no_nickname'))
     }
 
     // 🔹 백엔드 스펙에 맞는 body
@@ -95,7 +96,7 @@ export default function InfoScreen({ navigation }) {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
 
       setIsLoading(false);
-      Alert.alert('저장 완료', '기본정보가 저장되었습니다.');
+      Alert.alert(t('info_alert_save_success_title'), t('info_alert_save_success_body'))
       navigation.replace('Tabs');
     } catch (e) {
       console.log('🔥 onComplete error:', e);
@@ -104,6 +105,7 @@ export default function InfoScreen({ navigation }) {
     }
   };
 
+  const { t } = useTranslation();
 
   return (
     <SafeAreaView style={styles.safe}>
@@ -115,50 +117,51 @@ export default function InfoScreen({ navigation }) {
           alignItems: 'center', justifyContent: 'center', zIndex: 10,
         }}>
           <ActivityIndicator size="large" color="#2F6FED" />
-          <Text style={{ marginTop: 12, color: '#333' }}>잠시만 기다려주세요...</Text>
+          <Text style={{ marginTop: 12, color: '#333' }}>{t('info_loading_message')}</Text>
         </View>
       )}
 
       <View style={styles.container}>
-        <Text style={styles.titleTop}>정확한 진단을 위해서</Text>
-        <Text style={styles.titleMain}>기본정보를 알려주세요</Text>
+        <Text style={styles.titleTop}>{t('info_title_top')}</Text>
+        <Text style={styles.titleMain}>{t('info_title_main')}</Text>
+
 
         <ScrollView>
 
           {/* 성별 */}
-          <Text style={styles.label}>성별</Text>
+          <Text style={styles.label}>{t('info_gender_label')}</Text>
           <View style={styles.segmentRow}>
             <Segment
               active={gender === 'male'}
               onPress={() => setGender('male')}
-              text="남성"
+              text={t('info_gender_male')}              
               icon={<Ionicons name="male" size={16} color={gender === 'male' ? '#2F6FED' : '#7B8AA0'} />}
             />
             <Segment
               active={gender === 'female'}
               onPress={() => setGender('female')}
-              text="여성"
+              text={t('info_gender_female')}
               icon={<Ionicons name="female" size={16} color={gender === 'female' ? '#2F6FED' : '#7B8AA0'} />}
             />
             <Segment
               active={gender === 'other'}
               onPress={() => setGender('other')}
-              text="기타"
+              text={t('info_gender_other')}
               icon={<Ionicons name="person" size={16} color={gender === 'other' ? '#2F6FED' : '#7B8AA0'} />}
             />
           </View>
 
           {/* 태어난 년도 */}
-          <Text style={[styles.label, { marginTop: 18 }]}>태어난 년도</Text>
+          <Text style={[styles.label, { marginTop: 18 }]}>{t('info_birth_year_label')}</Text>
           <Pressable style={styles.select} onPress={() => setYearOpen(true)}>
             <Text style={[styles.selectText, !year && { color: '#B8BFC9' }]}>
-              {year ? `${year}년` : '연도 선택'}
+              {year ? `${year}` : t('info_birth_year_placeholder')}
             </Text>
             <Ionicons name="chevron-down" size={18} color="#9AA0A6" />
           </Pressable>
 
           {/* 생일 */}
-          <Text style={[styles.label, { marginTop: 18 }]}>생일</Text>
+          <Text style={[styles.label, { marginTop: 18 }]}>{t('info_birth_label')}</Text>
           <View style={styles.inlineInputs}>
             <UnderlineInput
               value={month}
@@ -166,18 +169,18 @@ export default function InfoScreen({ navigation }) {
               placeholder="12"
               keyboardType="number-pad"
             />
-            <Text style={styles.unit}>월</Text>
+            <Text style={styles.unit}>{t('info_month_unit')}</Text>
             <UnderlineInput
               value={day}
               onChangeText={(v) => setDay(v.replace(/[^0-9]/g, '').slice(0, 2))}
               placeholder="05"
               keyboardType="number-pad"
             />
-            <Text style={styles.unit}>일</Text>
+            <Text style={styles.unit}>{t('info_day_unit')}</Text>
           </View>
 
           {/* 신체정보 */}
-          <Text style={[styles.label, { marginTop: 18 }]}>신체정보</Text>
+          <Text style={[styles.label, { marginTop: 18 }]}>{t('info_body_label')}</Text>
           <View style={styles.inlineInputs}>
             <UnderlineInput
               value={height}
@@ -196,11 +199,11 @@ export default function InfoScreen({ navigation }) {
           </View>
 
           {/* 닉네임 */}
-          <Text style={[styles.label, { marginTop: 22 }]}>닉네임</Text>
+          <Text style={[styles.label, { marginTop: 22 }]}>{t('info_nickname_label')}</Text>
           <TextInput
             value={nickname}
             onChangeText={setNickname}
-            placeholder="원하시는 닉네임을 입력해주세요"
+            placeholder={t('info_nickname_placeholder')}
             placeholderTextColor="#C5CBD4"
             style={styles.nickInput}
           />
@@ -209,7 +212,7 @@ export default function InfoScreen({ navigation }) {
 
         {/* 완료 버튼 */}
         <Pressable style={styles.button} onPress={onComplete}>
-          <Text style={styles.buttonText}>완료</Text>
+          <Text style={styles.buttonText}>{t('info_button_done')}</Text>
         </Pressable>
       </View>
 
@@ -218,7 +221,7 @@ export default function InfoScreen({ navigation }) {
         <View style={styles.modalBackdrop}>
           <View style={styles.modalSheet}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>태어난 년도</Text>
+              <Text style={styles.modalTitle}>{t('info_modal_year_title')}</Text>
               <Pressable onPress={() => setYearOpen(false)} hitSlop={8}>
                 <Ionicons name="close" size={22} color="#111" />
               </Pressable>
@@ -234,7 +237,7 @@ export default function InfoScreen({ navigation }) {
                     setYearOpen(false);
                   }}
                 >
-                  <Text style={styles.yearText}>{item}년</Text>
+                  <Text style={styles.yearText}>{item}</Text>
                   {year === item && <Ionicons name="checkmark" size={20} color="#2F6FED" />}
                 </TouchableOpacity>
               )}

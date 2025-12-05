@@ -35,7 +35,7 @@ export default function LoginScreen({ navigation }) {
                     Alert.alert('로그인 성공', '로그인이 완료되었습니다.');
 
                     if (basicInfo) {
-                        navigation.replace('Tabs');      // 이미 인포페이지 입력 완
+                        navigation.replace('Language');      // 이미 인포페이지 입력 완
                     } else {
                         navigation.replace('Language');  // 새 사용자
                     }
@@ -67,7 +67,7 @@ export default function LoginScreen({ navigation }) {
                 {/* 구글 로그인 버튼 */}
                 <Pressable onPress={onGoogleSignIn} style={styles.googleBtn}>
                     <Image source={require('../../assets/icon/google.png')} style={styles.google} />
-                    <Text style={styles.googleText}>구글 계정으로 로그인</Text>
+                    <Text style={styles.googleText}>Sign in with Google</Text>
                 </Pressable>
 
                 {/* 여백 채우기 */}

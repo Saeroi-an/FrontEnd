@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { View, Text, ScrollView, TextInput, Pressable, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import styles from '../styles/homeStyles'; // 👈 스타일 분리
+import styles from '../styles/homeStyles';
 import { fetchProfile } from "../lib/api";
 
 export default function HomeScreen({ navigation }) {
+  const { t } = useTranslation();
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
@@ -16,20 +18,24 @@ export default function HomeScreen({ navigation }) {
     });
   }, []);
 
-  //BMI 계산 함수
-  function getBmiStatus(bmi) {
-    if (bmi < 18.5) return "저체중";
-    if (bmi < 23) return "정상";
-    if (bmi < 25) return "과체중";
-    return "비만";
-  }
+
+  // BMI 상태에 대한 번역 키 반환
+function getBmiStatusKey(bmi) {
+  if (bmi < 18.5) return "bmi_underweight";
+  if (bmi < 23) return "bmi_normal";
+  if (bmi < 25) return "bmi_overweight";
+  if (bmi < 30) return "bmi_obese";
+  return "bmi_extreme_obese";
+}
 
   const bmi = profile
     ? profile.weight / Math.pow(profile.height / 100, 2)
     : null;
 
   const bmiRounded = bmi ? bmi.toFixed(2) : null;
-  const bmiStatus = bmi ? getBmiStatus(bmi) : "";
+  const bmiStatusKey = bmi ? getBmiStatusKey(bmi) : null;
+  const bmiStatus = bmiStatusKey ? t(bmiStatusKey) : "";
+
   const height = profile ? profile.height : null;
   const weight = profile ? profile.weight : null;  
 
@@ -59,16 +65,18 @@ export default function HomeScreen({ navigation }) {
         {/* 인사 + 서브텍스트 */}
         <View style={styles.greetBox}>
           <Text style={styles.greetTitle}>
-            {profile ? `${profile.nickname}님 안녕하세요!` : '불러오는 중...'}
+            {profile 
+            ? t('home_greet_title', { name: profile.nickname })
+            : t('home_greet_loading')}
           </Text>
-          <Text style={styles.greetSub}>건강고민, 새로이안에게 맡겨 보세요!</Text>
+          <Text style={styles.greetSub}>{t('home_greet_sub')}</Text>
         </View>
 
         {/* 검색창 */}
         <View style={styles.searchBox}>
           <Ionicons name="search" size={18} color="#9AA1A9" />
           <TextInput
-            placeholder="감기, 코로나, 역류성 식도염"
+            placeholder={t('home_search_placeholder')}
             placeholderTextColor="#9AA1A9"
             style={styles.searchInput}
             returnKeyType="search"
@@ -77,8 +85,8 @@ export default function HomeScreen({ navigation }) {
 
         {/* 파란 배너 */}
         <Pressable style={styles.blueCard} onPress={() => { navigation.navigate('ChatPrescription') }}>
-          <Text style={styles.blueBadge}>읽기 힘든 처방전을 한눈에!</Text>
-          <Text style={styles.blueTitle}>처방전 인식하기</Text>
+        <Text style={styles.blueBadge}>{t('home_banner_badge')}</Text>
+        <Text style={styles.blueTitle}>{t('home_banner_title')}</Text>
           <View style={styles.blueIconRow}>
             <Image
               source={require('../../assets/images/note.png')}
@@ -88,18 +96,18 @@ export default function HomeScreen({ navigation }) {
         </Pressable>
 
         {/* 섹션: 진단서 */}
-        <Text style={styles.sectionTitle}>진단서</Text>
+        <Text style={styles.sectionTitle}>{t('home_section_diagnosis')}</Text>
         <View style={styles.cardList}>
           <ArrowCard
             icon={<Ionicons name="calendar-outline" size={24} color="#FF7A59" />}
-            title="셀프 진단 체크"
-            subtitle="어디서든 혼자서 간편하게"
+            title={t('home_selfcheck_title')}
+            subtitle={t('home_selfcheck_sub')}
             onPress={() => { navigation.navigate('SelfCheck') }}
           />
           <ArrowCard
             icon={<Ionicons name="folder-open-outline" size={24} color="#5B7CFF" />}
-            title="진단 저장 내역"
-            subtitle="한눈에 알아보는"
+            title={t('home_history_title')}
+            subtitle={t('home_history_sub')}
             onPress={() => { navigation.navigate('History') }}
           />
         </View>
@@ -107,9 +115,15 @@ export default function HomeScreen({ navigation }) {
         {/* BMI 카드 */}
         <View style={styles.bmiCard}>
           <View style={styles.rowBetween}>
-            <Text style={styles.bmiRowText}><Text style={styles.bold}>키</Text> {height}cm</Text>
+            <Text style={styles.bmiRowText}>
+              <Text style={styles.bold}>{t('home_bmi_label_height')}</Text> {height}cm
+              </Text>
             <Text style={styles.separator}>|</Text>
-            <Text style={styles.bmiRowText}><Text style={styles.bold}>몸무게</Text> {weight}kg</Text>
+
+            <Text style={styles.bmiRowText}>
+              <Text style={styles.bold}>{t('home_bmi_label_weight')}</Text> {weight}kg
+              </Text>
+
             <View style={styles.bmiChip}>
               <Text style={styles.bmiChipText}>
                 BMI {bmiRounded} · {bmiStatus}
@@ -141,11 +155,11 @@ export default function HomeScreen({ navigation }) {
             </View>
 
             <View style={styles.scaleLabels}>
-              <Text style={styles.scaleLabel}>저체중</Text>
-              <Text style={styles.scaleLabel}>정상</Text>
-              <Text style={styles.scaleLabel}>과체중</Text>
-              <Text style={styles.scaleLabel}>비만</Text>
-              <Text style={styles.scaleLabel}>고도비만</Text>
+              <Text style={styles.scaleLabel}>{t('bmi_underweight')}</Text>
+              <Text style={styles.scaleLabel}>{t('bmi_normal')}</Text>
+              <Text style={styles.scaleLabel}>{t('bmi_overweight')}</Text>
+              <Text style={styles.scaleLabel}>{t('bmi_obese')}</Text>
+              <Text style={styles.scaleLabel}>{t('bmi_extreme_obese')}</Text>
             </View>
 
 

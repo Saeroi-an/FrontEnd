@@ -1,0 +1,26 @@
+{
+    "home_greet_loading": "加载中...",
+    "home_greet_title": "{{name}}，你好！",
+    "home_greet_sub": "健康烦恼，交给Saeroi-An吧！",
+  
+    "home_search_placeholder": "感冒、新冠、反流性食管炎",
+  
+    "home_banner_badge": "难以辨认的处方，一目了然！",
+    "home_banner_title": "识别处方笺",
+  
+    "home_section_diagnosis": "诊断单",
+    "home_selfcheck_title": "自我诊断检查",
+    "home_selfcheck_sub": "随时随地，自己轻松检查",
+    "home_history_title": "诊断记录",
+    "home_history_sub": "一目了然的记录",
+  
+    "home_bmi_label_height": "身高",
+    "home_bmi_label_weight": "体重",
+  
+    "bmi_underweight": "体重过低",
+    "bmi_normal": "正常",
+    "bmi_overweight": "超重",
+    "bmi_obese": "肥胖",
+    "bmi_extreme_obese": "重度肥胖"
+  }
+  
