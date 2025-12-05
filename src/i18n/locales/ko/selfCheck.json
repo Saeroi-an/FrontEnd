@@ -1,0 +1,13 @@
+{
+    "selfcheck_header_title": "셀프 진단 체크",
+    "selfcheck_title": "진단 부위",
+    "selfcheck_subtitle": "현재 불편하신 부위를 모두 선택해주세요!",
+    "selfcheck_next": "다음",
+    "part_eye": "눈",
+    "part_nose": "코/호흡기/내과",
+    "part_bandage": "외상/외과",
+    "part_bone": "뼈/관절",
+    "part_teeth": "치아",
+    "part_female": "여성"
+  }
+  
