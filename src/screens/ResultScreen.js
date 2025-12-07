@@ -2,20 +2,19 @@ import React from 'react';
 import { View, Text, Image, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';   // ⭐ 추가
 import styles from '../styles/resultStyles';
 
 export default function ResultScreen({ navigation, route }) {
   // const { answers } = route.params || {}; // 필요하면 사용
+  const { t } = useTranslation();               // ⭐ 추가
 
   const goHome = () => {
-    // 탭 밖 루트 Stack 구조라면:
-    navigation.navigate('Tabs');              // 탭 루트로 이동 (기본 Home 탭)
-    // 또는 특정 탭 지정: navigation.navigate('Tabs', { screen: 'Home' });
-    // 전체 스택 초기화하고 홈: navigation.reset({ index: 0, routes: [{ name: 'Tabs' }] });
+    navigation.navigate('Tabs');
+    // 또는: navigation.navigate('Tabs', { screen: 'Home' });
   };
 
   const goSaved = () => {
-    // 진단 저장 내역 화면으로 이동할 때 라우트 이름에 맞게 수정
     navigation.navigate('History');
   };
 
@@ -26,7 +25,9 @@ export default function ResultScreen({ navigation, route }) {
         <Pressable onPress={() => navigation.goBack()} hitSlop={8}>
           <Ionicons name="chevron-back" size={22} color="#111" />
         </Pressable>
-        <Text style={styles.headerTitle}>셀프 진단 체크</Text>
+        <Text style={styles.headerTitle}>
+          {t('selfcheck_header_title')}
+        </Text>
         <View style={{ width: 22 }} />
       </View>
 
@@ -39,18 +40,27 @@ export default function ResultScreen({ navigation, route }) {
       <View style={styles.body}>
         {/* 결과 이미지 */}
         <View style={styles.thumbBox}>
-          <Image source={require('../../assets/images/result_thumb.png')} style={styles.thumb} />
+          <Image
+            source={require('../../assets/images/result_thumb.png')}
+            style={styles.thumb}
+          />
         </View>
 
-        <Text style={styles.title}>진단결과가{'\n'}저장되었습니다!</Text>
+        <Text style={styles.title}>
+          {t('selfcheck_result_title')}
+        </Text>
 
         {/* 버튼들 */}
         <Pressable style={[styles.btn, styles.btnPrimary]} onPress={goHome}>
-          <Text style={styles.btnPrimaryText}>홈으로</Text>
+          <Text style={styles.btnPrimaryText}>
+            {t('selfcheck_result_home')}
+          </Text>
         </Pressable>
 
         <Pressable style={[styles.btn, styles.btnGhost]} onPress={goSaved}>
-          <Text style={styles.btnGhostText}>진단 저장 내역으로 가기</Text>
+          <Text style={styles.btnGhostText}>
+            {t('selfcheck_result_history')}
+          </Text>
         </Pressable>
       </View>
     </SafeAreaView>

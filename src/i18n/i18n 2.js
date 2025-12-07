@@ -7,13 +7,11 @@ import koLanguage from './locales/ko/language.json';
 import koInfo from './locales/ko/info.json';
 import koHome from './locales/ko/home.json';
 import koSelfCheck from './locales/ko/selfCheck.json';   // ⭐ 추가
-import koQuestions from './locales/ko/questions.json'
 
 import zhLanguage from './locales/zh/language.json';
 import zhInfo from './locales/zh/info.json';
 import zhHome from './locales/zh/home.json';
 import zhSelfCheck from './locales/zh/selfCheck.json';   // ⭐ 추가
-import zhQuestions from './locales/zh/questions.json'
 
 
 const STORAGE_KEY = 'app_language';
@@ -25,8 +23,7 @@ const resources = {
       ...koLanguage,
       ...koInfo,
       ...koHome,
-      ...koSelfCheck,
-      ...koQuestions
+      ...koSelfCheck
     },
   },
   zh: {
@@ -35,7 +32,6 @@ const resources = {
       ...zhInfo,
       ...zhHome,
       ...zhSelfCheck,
-      ...zhQuestions,
     },
   },
 };

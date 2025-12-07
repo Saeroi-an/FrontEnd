@@ -8,6 +8,9 @@
     "part_bandage": "외상/외과",
     "part_bone": "뼈/관절",
     "part_teeth": "치아",
-    "part_female": "여성"
+    "part_female": "여성",
+    "selfcheck_result_title": "진단결과가\n저장되었습니다!",
+    "selfcheck_result_home": "홈으로",
+    "selfcheck_result_history": "진단 저장 내역으로 가기"
   }
   

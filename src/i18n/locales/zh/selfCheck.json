@@ -8,6 +8,9 @@
     "part_bandage": "外伤/外科",
     "part_bone": "骨骼/关节",
     "part_teeth": "牙齿",
-    "part_female": "女性"
+    "part_female": "女性",
+    "selfcheck_result_title": "诊断结果已保存！",
+    "selfcheck_result_home": "返回首页",
+    "selfcheck_result_history": "前往诊断记录"
   }
   

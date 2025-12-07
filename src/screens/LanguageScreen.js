@@ -56,7 +56,7 @@ export default function LanguageScreen({ navigation }) {
 
         <Pressable onPress={onNext} style={styles.btn}>
           {/* 🔥 버튼 텍스트도 번역 키 사용 */}
-          <Text style={styles.btnText}>{t('language_done')}</Text>
+          <Text style={styles.btnText}>선택 완료</Text>
         </Pressable>
       </View>
     </SafeAreaView>
