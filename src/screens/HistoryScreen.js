@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles/historyStyles';
+import { Alert } from 'react-native';
 
 const STORAGE_KEY = 'diagnosis_history';
 
@@ -35,6 +36,18 @@ function groupByYear(items) {
 export default function HistoryScreen({ navigation }) {
     const [sections, setSections] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+
+    // useEffect(() => {
+    //     // ⚠️ 실행 후에는 꼭 주석 처리하세요!
+    //     AsyncStorage.removeItem('diagnosis_history').then(() =>
+    //       console.log('진단내역 전체 삭제 완료')
+    //     );
+      
+    //     const unsub = navigation.addListener('focus', load);
+    //     load();
+    //     return unsub;
+    //   }, [navigation, load]);
+
 
     const load = useCallback(async () => {
         try {
@@ -76,7 +89,7 @@ export default function HistoryScreen({ navigation }) {
 
             {/* ② 날짜 */}
             <View style={styles.cardMetaRow}>
-                {/* <Ionicons name="time-outline" size={14} color="#9AA0A6" /> */}
+                <Ionicons name="time-outline" size={14} color="#9AA0A6" style={styles.dateicon}/>
                 <Text style={styles.cardMetaText}>{formatDate(item.dateISO)}</Text>
             </View>
         </Pressable>

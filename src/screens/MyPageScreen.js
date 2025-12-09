@@ -1,10 +1,24 @@
-import React from 'react';
+import { useEffect, useState } from "react";
 import { View, Text, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles/mypageStyles';
+import { fetchProfile } from "../lib/api";
 
 export default function MyPageScreen() {
+  const [profile, setProfile] = useState(null);
+
+  useEffect(() => {
+    fetchProfile().then((data) => {
+      setProfile(data);
+    }).catch((err) => {
+      console.log("프로필 불러오기 실패:", err);
+    });
+  }, []);
+  
+  const height = profile ? profile.height : null;
+  const weight = profile ? profile.weight : null;  
+
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
@@ -14,21 +28,25 @@ export default function MyPageScreen() {
         {/* 프로필 */}
         <View style={styles.profileRow}>
           <View style={styles.avatar} />
-          <View style={{ flex: 1, marginLeft:7, }}>
-            <Text style={styles.name}>김성신님</Text>
-            <Text style={styles.subText}>만 21세{'\n'}160cm 55kg</Text>
+          <View style={{ flex: 1, marginLeft: 7, }}>
+            <Text style={styles.name}>
+            {profile ? `${profile.nickname}님` : '불러오는 중...'}
+              </Text>
+            <Text style={styles.subText}>만 21세{'\n'}
+            {height}cm {weight}kg
+            </Text>
           </View>
         </View>
 
         {/* 설정 카드 */}
         <View style={styles.card}>
-          <Row label="계정" onPress={() => {}} />
-          <Row label="언어 설정" onPress={() => {}} />
+          <Row label="계정" onPress={() => { }} />
+          <Row label="언어 설정" onPress={() => { }} />
           <Row label="버전" right="ver 1.00" disabled />
         </View>
 
         {/* 로그아웃 */}
-        <Pressable style={styles.logoutRow} onPress={() => {}}>
+        <Pressable style={styles.logoutRow} onPress={() => { }}>
           <Ionicons name="settings-outline" size={18} color="#4B5563" />
           <Text style={styles.logoutText}>로그아웃</Text>
         </Pressable>

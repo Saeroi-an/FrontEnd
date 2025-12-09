@@ -1,0 +1,16 @@
+{
+    "selfcheck_header_title": "自我诊断检查",
+    "selfcheck_title": "诊断部位",
+    "selfcheck_subtitle": "请选择所有不舒服的部位。",
+    "selfcheck_next": "下一步",
+    "part_eye": "眼睛",
+    "part_nose": "鼻/呼吸系统/内科",
+    "part_bandage": "外伤/外科",
+    "part_bone": "骨骼/关节",
+    "part_teeth": "牙齿",
+    "part_female": "女性",
+    "selfcheck_result_title": "诊断结果已保存！",
+    "selfcheck_result_home": "返回首页",
+    "selfcheck_result_history": "前往诊断记录"
+  }
+  
