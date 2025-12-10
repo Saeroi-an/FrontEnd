@@ -40,11 +40,11 @@ export default StyleSheet.create({
   },
 
   thumb: {
-    width: 80,
-    height: 80,
-    borderRadius: 10,
+    width: 87,
+    height: 87,
+    borderRadius: 5,
     backgroundColor: '#E6E8EC',
-    marginLeft:7,
+    marginLeft:1,
   },
 
   info: {
@@ -52,19 +52,20 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   name: {
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: '700',
     color: '#222',
-    marginBottom: 6,
+    marginBottom: 0,
   },
   metaRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    marginTop: 2,
+    gap: 3,
+    marginTop: 7,
+    marginRight:30,
   },
   metaText: {
-    fontSize: 13,
+    fontSize: 10,
     color: '#8A8F98',
   },
 });

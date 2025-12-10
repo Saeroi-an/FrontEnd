@@ -1,0 +1,41 @@
+{
+    "info_title_top": "为了更准确的诊断",
+    "info_title_main": "请先填写基本信息",
+  
+    "info_gender_label": "性别",
+    "info_gender_male": "男性",
+    "info_gender_female": "女性",
+    "info_gender_other": "其他",
+  
+    "info_birth_year_label": "出生年份",
+    "info_birth_year_placeholder": "选择年份",
+    "info_birth_label": "生日",
+    "info_month_unit": "月",
+    "info_day_unit": "日",
+  
+    "info_body_label": "身体信息",
+    "info_height_placeholder": "160",
+    "info_weight_placeholder": "50",
+    "info_height_unit": "cm",
+    "info_weight_unit": "kg",
+  
+    "info_nickname_label": "昵称",
+    "info_nickname_placeholder": "请输入昵称",
+  
+    "info_modal_year_title": "出生年份",
+  
+    "info_button_done": "完成",
+    "info_loading_message": "请稍候…",
+  
+    "info_alert_notice_title": "提示",
+    "info_alert_notice_body_invalid_number": "请用数字输入身高和体重。",
+    "info_alert_notice_body_no_gender": "请选择性别。",
+    "info_alert_notice_body_no_birth": "请完整填写出生年月日。",
+    "info_alert_notice_body_no_nickname": "请输入昵称。",
+  
+    "info_alert_save_success_title": "已保存",
+    "info_alert_save_success_body": "基本信息已保存。",
+    "info_alert_save_error_title": "错误",
+    "info_alert_save_error_body": "保存失败，请重试。"
+  }
+  

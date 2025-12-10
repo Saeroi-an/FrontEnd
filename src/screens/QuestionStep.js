@@ -7,22 +7,25 @@ import styles from '../styles/questionStyles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CATEGORY_TITLES } from '../data/categoryTitles';
 import { v4 as uuid } from 'uuid';
-import 'react-native-get-random-values'
 import { saveDiagnosisSession } from '../lib/history';
+import { useTranslation } from 'react-i18next';   // ⭐ i18n 추가
 
-const CATEGORY_LABELS = {
-    eye: '👁️ 눈',
-    nose: '👃🏻 코/호흡기/내과',
-    bandage: '🩹 외상/외과',
-    bone: '🦴 뼈/관절',
-    teeth: '🦷 치아',
-    female: '👩‍⚕️ 여성',
+// 카테고리 라벨 키
+const CATEGORY_LABEL_KEYS = {
+    eye: 'selfcheck_category_eye',
+    nose: 'selfcheck_category_nose',
+    bandage: 'selfcheck_category_bandage',
+    bone: 'selfcheck_category_bone',
+    teeth: 'selfcheck_category_teeth',
+    female: 'selfcheck_category_female',
 };
 
 export default function QuestionStep({ route, navigation }) {
     const { selectedParts, idx, answers } = route.params;
+    const { t } = useTranslation();       // ⭐ i18n 사용
+    const [choice, setChoice] = useState(null);
 
-    // 선택된 부위들의 질문을 하나 배열로 합치기
+    // 선택 부위 질문 합치기
     const questions = useMemo(
         () => selectedParts.flatMap(p => QUESTION_SETS[p] || []),
         [selectedParts]
@@ -30,32 +33,41 @@ export default function QuestionStep({ route, navigation }) {
 
     const q = questions[idx];
     const categoryKey = q?.id?.split('_')?.[0];
-    const categoryLabel = CATEGORY_LABELS[categoryKey] ?? null;
-    const [choice, setChoice] = useState(answers[q?.id] ?? null);
+    const categoryLabelKey = CATEGORY_LABEL_KEYS[categoryKey] ?? null;
+
+    useMemo(() => {
+        setChoice(answers[q?.id] ?? null);
+    }, [q]);
 
     if (!q) {
-        // 방어: 질문이 없으면 결과로
         navigation.replace('Result', { answers });
         return null;
     }
 
-    const onNext = () => {
+    const onNext = async () => {
         const nextAnswers = { ...answers, [q.id]: choice };
         const nextIdx = idx + 1;
+
         if (nextIdx < questions.length) {
             navigation.push('QuestionStep', {
                 selectedParts,
                 idx: nextIdx,
                 answers: nextAnswers,
             });
-            console.log({nextAnswers})
         } else {
+            try {
+                // 저장
+                await appendHistoryByParts(selectedParts, {
+                    answers: nextAnswers,
+                    selectedParts,
+                });
+            } catch (e) {
+                console.warn('appendHistory error', e);
+            }
+
             navigation.replace('Result', { answers: nextAnswers });
-            console.log({nextAnswers})
         }
     };
-
-    const onPrev = () => navigation.goBack();
 
     const STORAGE_KEY = 'diagnosis_history';
 
@@ -64,13 +76,13 @@ export default function QuestionStep({ route, navigation }) {
         const list = raw ? JSON.parse(raw) : [];
         const nowISO = new Date().toISOString();
 
-        // 부위별로 한 항목씩 생성 (중복 허용)
         const entries = selectedParts.map((partKey) => ({
             id: uuid(),
-            part: partKey,                                  // 원본 키
-            title: CATEGORY_TITLES[partKey] || partKey,     // 리스트에 보일 텍스트(부위명)
-            dateISO: nowISO,                                 // 날짜
-            ...extra,                                       // 필요 시 answers 등 추가
+            part: partKey,
+            // CATEGORY_TITLES → key로 변환됨, 화면에서 t() 적용됨
+            title: CATEGORY_TITLES[partKey] || partKey,
+            dateISO: nowISO,
+            ...extra,
         }));
 
         await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify([...entries, ...list]));
@@ -78,68 +90,75 @@ export default function QuestionStep({ route, navigation }) {
 
     return (
         <SafeAreaView style={styles.safe}>
-
-            {/* 상단 헤더 (셀프진단체크 밑 화살표) */}
+            {/* 상단 헤더 */}
             <View style={styles.header}>
                 <Pressable hitSlop={8} onPress={() => navigation.goBack()}>
                     <Ionicons name="chevron-back" size={22} color="#111" />
                 </Pressable>
-                <Text style={styles.headerTitle}>셀프 진단 체크</Text>
+                <Text style={styles.headerTitle}>{t('selfcheck_header_title')}</Text>
                 <View style={{ width: 22 }} />
             </View>
 
             {/* 진행바 */}
             <View style={styles.progressTrack}>
-                <View style={[styles.progressFill, { width: `${((idx + 1) / questions.length) * 100}%` }]} />
+                <View
+                    style={[
+                        styles.progressFill,
+                        { width: `${((idx + 1) / questions.length) * 100}%` },
+                    ]}
+                />
             </View>
 
             <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.qBox}>
-                    {categoryLabel ? <Text style={styles.categoryText}>{categoryLabel} 질문</Text> : null}
-                    {/* 질문앞에 번호 표시하고싶을 시 */}
-                    {/* <Text style={styles.qText}>{idx + 1}. {q.question}</Text> */}
-                    <Text style={styles.qText}>{q.question}</Text>
+                    {/* 카테고리 라벨 */}
+                    {categoryLabelKey && (
+                        <Text style={styles.categoryText}>
+                            {t(categoryLabelKey)} {t('selfcheck_question_label')}
+                        </Text>
+                    )}
 
-                    {q.options.map(opt => {
-                        const active = choice === opt;
+                    {/* 질문 */}
+                    <Text style={styles.qText}>{t(q.questionKey)}</Text>
+
+                    {/* 선택지 */}
+                    {q.optionKeys.map(key => {
+                        const active = choice === key;
                         return (
                             <Pressable
-                                key={opt}
-                                onPress={() => setChoice(opt)}
+                                key={key}
+                                onPress={() => setChoice(key)}
                                 style={[styles.optBtn, active ? styles.optActive : styles.optInactive]}
                             >
-                                {/* 텍스트 */}
                                 <Text style={[styles.optText, active && styles.optTextActive]}>
-                                    {opt}
+                                    {t(key)}
                                 </Text>
 
-                                {/* 체크 아이콘 (항상 오른쪽 끝 고정) */}
                                 <Ionicons
                                     name="checkmark"
                                     size={22}
                                     color={active ? '#007AFF' : '#ccc'}
                                     style={styles.optCheck}
                                 />
-
                             </Pressable>
                         );
                     })}
                 </View>
             </ScrollView>
 
+            {/* 하단 버튼 */}
             <View style={styles.bottomBox}>
-                {/* <Pressable onPress={onPrev} style={[styles.btn, styles.btnPrev]}>
-                    <Text style={styles.btnTextBlack}>이전</Text>
-                </Pressable> */}
                 <Pressable
                     disabled={!choice}
                     onPress={onNext}
-                    style={[styles.btn, choice ? styles.btnNextOn : styles.btnNextOff]}
+                    style={[
+                        styles.btn,
+                        choice ? styles.btnNextOn : styles.btnNextOff,
+                    ]}
                 >
-                    <Text style={styles.btnTextWhite}>다음</Text>
+                    <Text style={styles.btnTextWhite}>{t('selfcheck_next')}</Text>
                 </Pressable>
             </View>
         </SafeAreaView>
-
     );
 }

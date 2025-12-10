@@ -1,0 +1,114 @@
+{
+    "selfcheck_header_title": "自我诊断检查",
+
+    "selfcheck_category_eye": "👀 眼睛",
+    "selfcheck_category_nose": "👃🏻 鼻/呼吸系统/内科",
+    "selfcheck_category_bandage": "🩹 外伤/外科",
+    "selfcheck_category_bone": "🦴 骨骼/关节",
+    "selfcheck_category_teeth": "🦷 牙齿",
+    "selfcheck_category_female": "👩‍⚕️ 女性",
+  
+    "selfcheck_question_label": "问题",
+    "selfcheck_next": "下一步",
+    "q_eye_q1": "眼睛最不舒服的症状是什么？",
+  "q_eye_q1_opt1": "充血/瘙痒",
+  "q_eye_q1_opt2": "视野模糊/看不清楚",
+  "q_eye_q1_opt3": "疼痛/异物感",
+  "q_eye_q1_opt4": "无明显症状",
+
+  "q_eye_q2": "症状持续了多久？",
+  "q_eye_q2_opt1": "一天以内",
+  "q_eye_q2_opt2": "2~3天",
+  "q_eye_q2_opt3": "一周以上",
+
+  "q_eye_q3": "什么时候症状会加重？",
+  "q_eye_q3_opt1": "看书/看手机时",
+  "q_eye_q3_opt2": "户外活动（阳光、灰尘等）",
+  "q_eye_q3_opt3": "无明显情况",
+
+
+  "q_nose_q1": "目前最不舒服的症状是什么？",
+  "q_nose_q1_opt1": "咳嗽/有痰",
+  "q_nose_q1_opt2": "流鼻涕/鼻塞",
+  "q_nose_q1_opt3": "喉咙痛",
+  "q_nose_q1_opt4": "发热/疲劳",
+
+  "q_nose_q2": "症状持续了多久？",
+  "q_nose_q2_opt1": "一天以内",
+  "q_nose_q2_opt2": "2~3天",
+  "q_nose_q2_opt3": "一周以上",
+
+  "q_nose_q3": "有发烧吗？",
+  "q_nose_q3_opt1": "没有",
+  "q_nose_q3_opt2": "37.5~38°C",
+  "q_nose_q3_opt3": "38°C以上",
+
+
+  "q_bandage_q1": "有没有受伤的部位？",
+  "q_bandage_q1_opt1": "手/手臂",
+  "q_bandage_q1_opt2": "腿/脚",
+  "q_bandage_q1_opt3": "头/身体",
+  "q_bandage_q1_opt4": "没有",
+
+  "q_bandage_q2": "伤口状况如何？",
+  "q_bandage_q2_opt1": "有出血",
+  "q_bandage_q2_opt2": "肿胀/瘀青",
+  "q_bandage_q2_opt3": "有渗液/脓",
+  "q_bandage_q2_opt4": "没有",
+
+  "q_bandage_q3": "疼痛程度如何？",
+  "q_bandage_q3_opt1": "几乎无痛",
+  "q_bandage_q3_opt2": "轻微疼痛",
+  "q_bandage_q3_opt3": "严重疼痛/难以活动",
+
+
+  "q_bone_q1": "主要疼痛部位是哪里？",
+  "q_bone_q1_opt1": "腰/颈",
+  "q_bone_q1_opt2": "肩/手臂",
+  "q_bone_q1_opt3": "膝盖/腿",
+  "q_bone_q1_opt4": "无",
+
+  "q_bone_q2": "在什么情况下感到疼痛？",
+  "q_bone_q2_opt1": "只有活动时",
+  "q_bone_q2_opt2": "休息时也会持续",
+  "q_bone_q2_opt3": "运动或搬重物时",
+
+  "q_bone_q3": "是否有肿胀或变形？",
+  "q_bone_q3_opt1": "没有",
+  "q_bone_q3_opt2": "轻微肿胀",
+  "q_bone_q3_opt3": "严重肿胀/活动受限",
+
+
+  "q_teeth_q1": "牙齿相关的不适症状是什么？",
+  "q_teeth_q1_opt1": "敏感/疼痛",
+  "q_teeth_q1_opt2": "牙龈出血/肿胀",
+  "q_teeth_q1_opt3": "口臭/不适感",
+  "q_teeth_q1_opt4": "无",
+
+  "q_teeth_q2": "什么时候症状最严重？",
+  "q_teeth_q2_opt1": "吃东西时",
+  "q_teeth_q2_opt2": "刷牙时",
+  "q_teeth_q2_opt3": "没有特别情况",
+
+  "q_teeth_q3": "疼痛程度如何？",
+  "q_teeth_q3_opt1": "没有",
+  "q_teeth_q3_opt2": "轻微疼痛",
+  "q_teeth_q3_opt3": "严重疼痛",
+
+
+  "q_female_q1": "最不舒服的症状是什么？",
+  "q_female_q1_opt1": "月经不调/经痛",
+  "q_female_q1_opt2": "分泌物增多/异味",
+  "q_female_q1_opt3": "下腹疼痛/瘙痒",
+  "q_female_q1_opt4": "没有",
+
+  "q_female_q2": "症状持续了多久？",
+  "q_female_q2_opt1": "一天以内",
+  "q_female_q2_opt2": "2~3天",
+  "q_female_q2_opt3": "一周以上",
+
+  "q_female_q3": "是否影响日常生活？",
+  "q_female_q3_opt1": "完全没有",
+  "q_female_q3_opt2": "有一点影响",
+  "q_female_q3_opt3": "影响严重"
+}

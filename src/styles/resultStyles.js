@@ -45,7 +45,7 @@ export default StyleSheet.create({
 
   thumbBox: {
     alignItems: 'center',
-    marginTop:80,
+    marginTop:120,
     marginBottom:-50
   },
   thumb: {

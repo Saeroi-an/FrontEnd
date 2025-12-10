@@ -1,0 +1,26 @@
+{
+    "home_greet_loading": "불러오는 중...",
+    "home_greet_title": "{{name}}님 안녕하세요!",
+    "home_greet_sub": "건강고민, 새로이안에게 맡겨 보세요!",
+  
+    "home_search_placeholder": "감기, 코로나, 역류성 식도염",
+  
+    "home_banner_badge": "읽기 힘든 처방전을 한눈에!",
+    "home_banner_title": "처방전 인식하기",
+  
+    "home_section_diagnosis": "진단서",
+    "home_selfcheck_title": "셀프 진단 체크",
+    "home_selfcheck_sub": "어디서든 혼자서 간편하게",
+    "home_history_title": "진단 저장 내역",
+    "home_history_sub": "한눈에 알아보는",
+  
+    "home_bmi_label_height": "키",
+    "home_bmi_label_weight": "몸무게",
+  
+    "bmi_underweight": "저체중",
+    "bmi_normal": "정상",
+    "bmi_overweight": "과체중",
+    "bmi_obese": "비만",
+    "bmi_extreme_obese": "고도비만"
+  }
+  

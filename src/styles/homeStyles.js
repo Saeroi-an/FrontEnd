@@ -46,7 +46,7 @@ export default StyleSheet.create({
     
       blueCard: {
         marginTop: 16,
-        backgroundColor: '#5B7CFF',
+        backgroundColor: '#364D7E',
         borderRadius: RADIUS,
         height:140,
         padding:20,
@@ -114,7 +114,32 @@ export default StyleSheet.create({
         backgroundColor: '#E9F6EE',
       },
       bmiChipText: { color: '#26A969', fontSize: 12, fontWeight: '700' },
-      bmiCenter: { alignItems: 'center', marginVertical: 12 },
+      bmiPointer: {
+        position: "absolute",
+        top: -3,          // bar 위로 살짝 올리기 (원하면 조정)
+        width: 15,
+        height: 15,
+        borderRadius: 999,
+        backgroundColor: "#333",
+        transform: [{ translateX: -6 }], // pointer의 중심을 맞추기 위함
+      },
+      bmiBubbleContainer: {
+        position: "absolute",
+        top: -30,                    // 바 위로 띄우기
+        transform: [{ translateX: -30 }], // 말풍선 중심 맞춤 (좌우 정렬)
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        backgroundColor: "#F1F3F7",
+        borderRadius: 12,
+      },
+      
+      bmiBubbleText: {
+        fontSize: 12,
+        color: "#333",
+        fontWeight: "600",
+      },
+      
+      bmiCenter: {  marginVertical: 12 },
       bmiBubble: {
         paddingHorizontal: 12,
         paddingVertical: 6,
