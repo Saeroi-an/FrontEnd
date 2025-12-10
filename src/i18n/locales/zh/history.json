@@ -1,0 +1,10 @@
+{
+  "history_header_title": "保存的诊断记录",
+  "history_empty_title": "暂无保存的诊断记录",
+  "history_empty_sub": "请在首页完成自我诊断。",
+  "history_year_suffix": "年",
+  "detail_date_desc": "进行的明细。",
+  "ko_notice": "以下是韩文内容，请展示给医生。",
+  "history_detail_answer_prefix": "A. 患者的回答： "
+
+}

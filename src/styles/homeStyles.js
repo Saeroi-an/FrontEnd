@@ -46,7 +46,7 @@ export default StyleSheet.create({
     
       blueCard: {
         marginTop: 16,
-        backgroundColor: '#5B7CFF',
+        backgroundColor: '#364D7E',
         borderRadius: RADIUS,
         height:140,
         padding:20,

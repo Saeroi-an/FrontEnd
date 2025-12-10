@@ -40,7 +40,8 @@ export default function HospitalScreen({ navigation }) {
   const renderItem = ({ item }) => (
     <Pressable 
       style={styles.card} 
-      onPress={() => navigation.navigate('HospitalDetail', { id: item.id })}
+      // 병원 상세 페이지 만들경우
+      // onPress={() => navigation.navigate('HospitalDetail', { id: item.id })}
     >
       {/* 병원 이미지 */}
       <Image 

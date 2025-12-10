@@ -61,4 +61,7 @@ export default StyleSheet.create({
   divider: { height: 1, backgroundColor: '#EEEEEE', marginVertical: 10 },
   emptyWrap: { marginTop: 24, alignItems: 'center' },
   emptyText: { color: '#9CA3AF' },
+  
+  translationnotice: {color: '#3276EB', fontWeight:'bold',marginVertical: 8, marginLeft: 10,fontSize:18,},
+  translatiosubnotice: {color: '#3276EB', marginLeft: 10,fontSize:13, marginBottom:5,}
 });

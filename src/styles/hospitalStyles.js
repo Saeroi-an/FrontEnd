@@ -52,7 +52,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   name: {
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: '700',
     color: '#222',
     marginBottom: 0,
@@ -65,7 +65,7 @@ export default StyleSheet.create({
     marginRight:30,
   },
   metaText: {
-    fontSize: 13,
+    fontSize: 10,
     color: '#8A8F98',
   },
 });

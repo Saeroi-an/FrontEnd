@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import styles from '../styles/historyStyles';
 import { Alert } from 'react-native';
+import i18n from '../i18n/i18n';
 
 const STORAGE_KEY = 'diagnosis_history';
 
@@ -24,11 +25,13 @@ function groupByYear(items) {
         if (!map.has(y)) map.set(y, []);
         map.get(y).push(it);
     });
+    const yearSuffix = i18n.t('history_year_suffix');
+
     // 최신 연도부터
     return [...map.entries()]
         .sort((a, b) => b[0] - a[0])
         .map(([year, data]) => ({
-            title: `${year}년`,
+            title: `${year}${yearSuffix}`, 
             data: data.sort((a, b) => new Date(b.dateISO) - new Date(a.dateISO)),
         }));
 }
@@ -81,7 +84,7 @@ export default function HistoryScreen({ navigation }) {
             <View style={styles.cardRow}>
                 {/* ① 선택한 부위 (title) */}
                 <Text style={styles.cardTitle} numberOfLines={1}>
-                    {item.title}
+                {i18n.t(item.title)}
                 </Text>
                 {/* 필요하면 > 아이콘 유지 */}
                 {/* <Ionicons name="chevron-forward" size={18} color="#9AA0A6" /> */}
@@ -106,7 +109,9 @@ export default function HistoryScreen({ navigation }) {
                 <Pressable hitSlop={8} onPress={() => navigation.goBack()}>
                     <Ionicons name="chevron-back" size={22} color="#111" />
                 </Pressable>
-                <Text style={styles.headerTitle}>진단 저장 내역</Text>
+                <Text style={styles.headerTitle}>
+                {i18n.t('history_header_title')}
+                </Text>
                 <View style={{ width: 22 }} />
             </View>
 
@@ -126,8 +131,13 @@ export default function HistoryScreen({ navigation }) {
                 // }
                 ListEmptyComponent={
                     <View style={styles.emptyBox}>
-                        <Text style={styles.emptyTitle}>저장된 진단이 없어요</Text>
-                        <Text style={styles.emptySub}>홈에서 셀프 진단을 완료해 보세요.</Text>
+                        <Text style={styles.emptyTitle}>
+                        {i18n.t('history_empty_title')}
+
+                        </Text>
+                        <Text style={styles.emptySub}>  
+                        {i18n.t('history_empty_sub')}
+                        </Text>
                     </View>
                 }
             />

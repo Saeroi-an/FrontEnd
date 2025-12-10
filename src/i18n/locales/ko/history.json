@@ -1,0 +1,10 @@
+{
+  "history_header_title": "진단 저장 내역",
+  "history_empty_title": "저장된 진단이 없어요",
+  "history_empty_sub": "홈에서 셀프 진단을 완료해 보세요.",
+  "history_year_suffix": "년",
+  "detail_date_desc": "진단한 내역이에요",
+  "ko_notice": "이 부분은 한국어 번역입니다. 의사에게 보여주세요.",
+  "history_detail_answer_prefix": "A. 환자의 대답: "
+  }
+  

@@ -7,6 +7,7 @@ export const API_ENDPOINTS = {
   GOOGLE_CALLBACK: `${API_BASE_URL}/api/auth/google/callback`,
   UPDATE_PROFILE: `${API_BASE_URL}/users/me/profile`,
   GET_PROFILE: `${API_BASE_URL}/users/me/profile`,
+  HOSPITALS: `${API_BASE_URL}/hospitals`,
 };
 
 export async function getAccessToken() {
