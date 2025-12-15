@@ -1,4 +1,3 @@
-// ChatPrescriptionScreen.js
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   View,
@@ -17,9 +16,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "../styles/chatPrescriptionStyles";
-import { API_ENDPOINTS } from "../lib/api";
+import { API_ENDPOINTS, getAccessToken } from "../lib/api";
 
-// 메시지 유틸
+// 메시지 ID 생성
 const makeId = () => Math.random().toString(36).slice(2);
 
 export default function ChatPrescriptionScreen({ navigation }) {
@@ -38,16 +37,18 @@ export default function ChatPrescriptionScreen({ navigation }) {
       );
       return null;
     }
+
     const result = await ImagePicker.launchCameraAsync({
       allowsEditing: false,
       quality: 1,
     });
+
     if (result.canceled) return null;
     const asset = result.assets?.[0];
     return asset?.uri ?? null;
   }, []);
 
-  // MIME 추정
+  // MIME 타입 추정
   const guessContentType = (uri) => {
     const lower = uri.split("?")[0].toLowerCase();
     if (lower.endsWith(".png")) return "image/png";
@@ -61,53 +62,63 @@ export default function ChatPrescriptionScreen({ navigation }) {
   const uploadPrescription = async (uri) => {
     console.log("🔵 uploadPrescription 호출, uri =", uri);
 
-    const nameFromUri = uri.split("/").pop() || "photo.jpg";
-    const contentType = guessContentType(uri);
-
-    console.log("🟡 파일 이름:", nameFromUri, " / contentType:", contentType);
-
-    const form = new FormData();
-    form.append("file", { uri, name: nameFromUri, type: contentType });
-
-    console.log(
-      "🟣 FormData 준비 완료, endpoint =",
-      API_ENDPOINTS.PRESCRIPTION_UPLOAD
-    );
-
-    const res = await fetch(API_ENDPOINTS.PRESCRIPTION_UPLOAD, {
-      method: "POST",
-      body: form, // Content-Type 자동
-    });
-
-    console.log("🟠 HTTP 응답 status =", res.status);
-    const text = await res.text();
-    console.log("📝 응답 원문 =", text);
-
-    let json;
     try {
-      json = JSON.parse(text);
-    } catch (e) {
-      throw new Error("JSON 파싱 실패: " + text);
-    }
+      const token = await getAccessToken();
+      console.log("🔑 Access Token:", token ? "존재함" : "없음");
 
-    if (!res.ok) {
-      throw new Error(`업로드 실패(${res.status}) ${json?.message || ""}`);
-    }
-    if (!json?.success) {
-      throw new Error(json?.message || "업로드 응답 에러");
-    }
+      if (!token) {
+        throw new Error("로그인 토큰이 없습니다.");
+      }
 
-    console.log("✅ uploadPrescription 성공, data =", json.data);
-    return json.data; // { id, file_url, original_filename, ai_analysis }
+      const nameFromUri = uri.split("/").pop() || "photo.jpg";
+      const contentType = guessContentType(uri);
+      console.log("🟡 파일 이름:", nameFromUri, " / contentType:", contentType);
+
+      const form = new FormData();
+      form.append("file", { uri, name: nameFromUri, type: contentType });
+
+      console.log("🟣 FormData 준비 완료, endpoint =", API_ENDPOINTS.PRESCRIPTION_UPLOAD);
+
+      const res = await fetch(API_ENDPOINTS.PRESCRIPTION_UPLOAD, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: form,
+      });
+
+      console.log("🟠 HTTP 응답 status =", res.status);
+      const text = await res.text();
+      console.log("📝 응답 원문 =", text);
+
+      let json;
+      try {
+        json = JSON.parse(text);
+      } catch (e) {
+        throw new Error("JSON 파싱 실패: " + text);
+      }
+
+      if (!res.ok) {
+        const errorMsg = `업로드 실패(${res.status}) ${json?.detail || json?.message || ""}`;
+        throw new Error(errorMsg);
+      }
+
+      console.log("✅ uploadPrescription 성공, data =", json);
+      return json;
+    } catch (error) {
+      console.log("❌ uploadPrescription 에러:", error);
+      throw error;
+    }
   };
 
-  // 촬영 → 이미지 메시지 + S3 업로드 → 안내 텍스트 추가
+  // 촬영 → 이미지 메시지 + S3 업로드 → AI 응답 추가
   const openCameraAndPushImage = useCallback(async () => {
     console.log("🔴 openCameraAndPushImage 시작");
     try {
       setOpeningCamera(true);
       const uri = await openCameraAndPick();
       if (!uri) return;
+
       console.log("🟠 카메라에서 받은 uri:", uri);
 
       // 1) 유저 이미지 메시지 추가
@@ -120,17 +131,16 @@ export default function ChatPrescriptionScreen({ navigation }) {
       };
       setMessages((prev) => [...prev, imgMsg]);
 
-      // 2) 👉 실제 S3 업로드
+      // 2) S3 업로드 & AI 분석
       const data = await uploadPrescription(uri);
-      console.log("✅ S3 업로드 완료:", data.file_url);
+      console.log("✅ S3 업로드 완료:", data);
 
-      // 3) 업로드 완료 안내 텍스트 메시지 추가
+      // 3) AI 응답 메시지 추가
       const botMsg = {
         id: makeId(),
         role: "assistant",
         kind: "text",
-        content:
-          "사진을 성공적으로 업로드했어요! 이제 처방전에 대해 궁금한 점을 채팅으로 물어보세요.",
+        content: data.ai_response || "처방전이 업로드되었습니다! 무엇이든 물어보세요.",
         createdAt: Date.now(),
       };
       setMessages((prev) => [...prev, botMsg]);
@@ -140,8 +150,7 @@ export default function ChatPrescriptionScreen({ navigation }) {
         id: makeId(),
         role: "assistant",
         kind: "text",
-        content:
-          "업로드 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.",
+        content: "업로드 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.",
         createdAt: Date.now(),
       };
       setMessages((prev) => [...prev, errMsg]);
@@ -159,7 +168,7 @@ export default function ChatPrescriptionScreen({ navigation }) {
     openCameraAndPushImage();
   }, [openCameraAndPushImage]);
 
-  // 특정 이미지 메시지 재촬영 (S3 재업로드는 아직 안 함)
+  // 특정 이미지 메시지 재촬영
   const retakeFor = useCallback(
     async (messageId) => {
       const uri = await openCameraAndPick();
@@ -173,11 +182,44 @@ export default function ChatPrescriptionScreen({ navigation }) {
     [openCameraAndPick]
   );
 
-  // 사용자 질문 → demo 응답
-  const onSend = useCallback(() => {
+  // 텍스트 채팅 API 호출
+  const sendChatMessage = async (text) => {
+    try {
+      const token = await getAccessToken();
+      if (!token) {
+        throw new Error("로그인 토큰이 없습니다.");
+      }
+
+      const res = await fetch(API_ENDPOINTS.PRESCRIPTION_CHAT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          message: text,
+        }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(json?.detail || "채팅 전송 실패");
+      }
+
+      return json.ai_response;
+    } catch (error) {
+      console.error("❌ sendChatMessage 에러:", error);
+      throw error;
+    }
+  };
+
+  // 텍스트 전송
+  const onSend = useCallback(async () => {
     const text = input.trim();
     if (!text) return;
 
+    // 사용자 메시지 추가
     const userMsg = {
       id: makeId(),
       role: "user",
@@ -188,6 +230,7 @@ export default function ChatPrescriptionScreen({ navigation }) {
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
 
+    // 로딩 메시지 추가
     const pendingId = makeId();
     setMessages((prev) => [
       ...prev,
@@ -195,36 +238,38 @@ export default function ChatPrescriptionScreen({ navigation }) {
         id: pendingId,
         role: "assistant",
         kind: "text",
-        content: "__LOADING__", // 여기만 로딩 유지 (텍스트 질문용)
+        content: "__LOADING__",
         createdAt: Date.now(),
       },
     ]);
 
-    // 데모 응답 (AI 연동 전)
-    setTimeout(() => {
+    try {
+      // 백엔드 API 호출
+      const aiResponse = await sendChatMessage(text);
+
+      // 로딩 메시지를 실제 응답으로 교체
       setMessages((prev) =>
         prev.map((m) =>
-          m.id === pendingId ? { ...m, content: makeDemoAnswer(text) } : m
+          m.id === pendingId ? { ...m, content: aiResponse } : m
         )
       );
-      requestAnimationFrame(() => {
-        listRef.current?.scrollToEnd({ animated: true });
-      });
-    }, 800);
+    } catch (error) {
+      // 에러 시 에러 메시지로 교체
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === pendingId
+            ? { ...m, content: "죄송합니다. 오류가 발생했습니다." }
+            : m
+        )
+      );
+    }
+
+    requestAnimationFrame(() => {
+      listRef.current?.scrollToEnd({ animated: true });
+    });
   }, [input]);
 
-  // 데모용 응답
-  function makeDemoAnswer(q) {
-    if (/중국|중국어|번역/.test(q))
-      return "복용법 중국어 예시: 每天三次，饭后30分钟服用500mg对乙酰氨基酚。请避免饮酒与驾驶。";
-    if (/언제|시간|횟수|몇/.test(q))
-      return "일반 예시: 하루 3회, 아침·점심·저녁 식후 30분에 복용하세요.";
-    if (/주의|조심|부작용|술|운전/.test(q))
-      return "주의사항 예시: 음주를 피하고, 졸릴 수 있으니 운전은 삼가세요.";
-    return `“${q}”에 대한 예시 답변입니다. 실제 서비스에서는 백엔드에서 처방전 인식/요약 후 정확한 답변을 반환하도록 연동하세요.`;
-  }
-
-  // 채팅 아이템
+  // 채팅 아이템 렌더링
   const renderItem = ({ item }) => {
     const isUser = item.role === "user";
     const isImage = item.kind === "image";
@@ -253,7 +298,7 @@ export default function ChatPrescriptionScreen({ navigation }) {
                 style={styles.msgImage}
                 resizeMode="cover"
               />
-              {/* 사진 왼쪽 카메라 아이콘 = 재촬영 */}
+              {/* 재촬영 버튼 */}
               <TouchableOpacity
                 onPress={() => retakeFor(item.id)}
                 style={styles.retakeBtn}
@@ -287,17 +332,6 @@ export default function ChatPrescriptionScreen({ navigation }) {
           </Pressable>
           <Text style={styles.headerTitle}>처방전 인식하기</Text>
           <View style={{ width: 22 }} />
-          {/* 필요하면 헤더 재촬영 버튼 활성화 */}
-          {/* <Pressable
-            onPress={openCameraAndPushImage}
-            style={styles.cameraBtn}
-            disabled={openingCamera}
-          >
-            <Ionicons name="camera" size={15} color="#1d4ed8" />
-            <Text style={styles.cameraBtnText}>
-              {openingCamera ? "카메라 여는 중..." : "재촬영"}
-            </Text>
-          </Pressable> */}
         </View>
 
         {/* 채팅 목록 */}
