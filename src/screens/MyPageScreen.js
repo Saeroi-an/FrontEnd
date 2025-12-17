@@ -32,7 +32,7 @@ export default function MyPageScreen() {
             <Text style={styles.name}>
             {profile ? `${profile.nickname}님` : '불러오는 중...'}
               </Text>
-            <Text style={styles.subText}>만 21세{'\n'}
+            <Text style={styles.subText}>만 22세{'\n'}
             {height}cm {weight}kg
             </Text>
           </View>

@@ -124,4 +124,19 @@ export default StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  infoNoticeContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    marginHorizontal: 16,
+    alignItems: "center",
+  },
+  infoNoticeIcon: {
+    marginBottom: 6,      // 🔥 세로 배치 핵심
+  }, 
+  infoNoticeText: {
+    fontSize: 12,
+    color: "#686868",
+    lineHeight: 18,
+    textAlign: "center",  // 🔥 세로 배치 필수
+  },
 });

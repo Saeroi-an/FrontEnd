@@ -35,7 +35,7 @@ export default function LoginScreen({ navigation }) {
                     Alert.alert('로그인 성공', '로그인이 완료되었습니다.');
 
                     if (basicInfo) {
-                        navigation.replace('Tabs');      // 이미 인포페이지 입력 완
+                        navigation.replace('Language');      // 이미 인포페이지 입력 완
                     } else {
                         navigation.replace('Language');  // 새 사용자
                     }
