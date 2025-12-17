@@ -1,6 +1,4 @@
-# SaeroI-An FrontEnd
-
-#  Frontend Repository – Project Structure
+# SaeroI-An FrontEnd Project Structure
 
 본 레포지토리는 **Expo 기반 React Native 프론트엔드 코드**를 관리합니다.
 
