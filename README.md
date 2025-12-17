@@ -29,7 +29,7 @@
 │   └── styles
 ├── App.js
 ├── app.json
-└── .env
+└── .env```
 
 ## 📦 Assets Directory (`assets/`)
 
