@@ -1,21 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Pressable,
-  FlatList,
-  Image,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableOpacity,
-  ActivityIndicator,
-  Alert,
-} from "react-native";
+import { View, Text, TextInput, Pressable, FlatList, Image, KeyboardAvoidingView, Platform, TouchableOpacity, ActivityIndicator, Alert, } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as ImagePicker from "expo-image-picker";
-import { Ionicons } from "@expo/vector-icons";
 import styles from "../styles/chatPrescriptionStyles";
+import { Ionicons } from "@expo/vector-icons";
 import { API_ENDPOINTS, getAccessToken } from "../lib/api";
 
 // 메시지 ID 생성
@@ -287,8 +275,8 @@ export default function ChatPrescriptionScreen({ navigation }) {
             isImage
               ? styles.imageBubble
               : isUser
-              ? styles.msgBubbleUser
-              : styles.msgBubbleBot
+                ? styles.msgBubbleUser
+                : styles.msgBubbleBot
           }
         >
           {isImage ? (
@@ -333,6 +321,22 @@ export default function ChatPrescriptionScreen({ navigation }) {
           <Text style={styles.headerTitle}>처방전 인식하기</Text>
           <View style={{ width: 22 }} />
         </View>
+
+        {/* 안내문구 */}
+        <View style={styles.infoNoticeContainer}>
+          <Ionicons
+            name="information-circle-outline"
+            size={15}
+            color="#3276EB"
+            style={styles.infoNoticeIcon}
+          />
+          <Text style={styles.infoNoticeText}>
+            새로이안은 이전 대화 내용을 기억합니다.{"\n"}
+            이전에 질문한 내용도 다시 질문해 보세요!
+          </Text>
+        </View>
+        {/* 안내문구 */}
+
 
         {/* 채팅 목록 */}
         <FlatList
