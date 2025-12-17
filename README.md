@@ -1,10 +1,20 @@
 # SaeroI-An FrontEnd
 
-# 📱 Frontend Repository – Project Structure
+#  Frontend Repository – Project Structure
 
 본 레포지토리는 **Expo 기반 React Native 프론트엔드 코드**를 관리합니다.
+관리자: 20211403@sungshin.ac.kr
 
 ---
+## 📱 실행방법
+
+```[bash] npm install 또는 yarn install
+환경 변수 설정: .env 파일 생성 (관리자에게 문의)
+서버 실행 후 npx expo start
+```
+
+---
+
 
 ## 🛠 Tech Stack
 
@@ -29,7 +39,8 @@
 │   └── styles
 ├── App.js
 ├── app.json
-└── .env```
+└── .env
+```
 
 ## 📦 Assets Directory (`assets/`)
 
