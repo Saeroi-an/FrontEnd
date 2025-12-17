@@ -73,7 +73,7 @@ function getBmiStatusKey(bmi) {
         </View>
 
         {/* 검색창 */}
-        <View style={styles.searchBox}>
+        {/* <View style={styles.searchBox}>
           <Ionicons name="search" size={18} color="#9AA1A9" />
           <TextInput
             placeholder={t('home_search_placeholder')}
@@ -81,7 +81,7 @@ function getBmiStatusKey(bmi) {
             style={styles.searchInput}
             returnKeyType="search"
           />
-        </View>
+        </View> */}
 
         {/* 파란 배너 */}
         <Pressable style={styles.blueCard} onPress={() => { navigation.navigate('ChatPrescription') }}>
