@@ -331,8 +331,8 @@ export default function ChatPrescriptionScreen({ navigation }) {
             style={styles.infoNoticeIcon}
           />
           <Text style={styles.infoNoticeText}>
-            새로이안은 이전 대화 내용을 기억합니다.{"\n"}
-            이전에 질문한 내용도 다시 질문해 보세요!
+          Saeroi-an记得之前的谈话内容。{"\n"}
+          之前提问的内容也再提问一次吧！          
           </Text>
         </View>
         {/* 안내문구 */}
@@ -354,7 +354,7 @@ export default function ChatPrescriptionScreen({ navigation }) {
         {/* 입력 바 */}
         <View style={styles.inputBar}>
           <TextInput
-            placeholder="처방전에 대해 무엇이든 물어보세요"
+            placeholder="关于处方，请尽管问"
             value={input}
             onChangeText={setInput}
             onSubmitEditing={onSend}
